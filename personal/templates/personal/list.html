@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+<div class="d-flex justify-content-center">
+  <div class="btn btn-primary">Polls</div>
+  <div class="btn btn-primary">Suggestion Box</div>
+  <div class="btn btn-primary">Suggestion List</div>
+</div>
+<div class="d-flex flex-column flex-row justify-content-center">
+{% block content %}
+  <h1>Suggestion List</h1>
+  {% if suggestion_list %}
+  <ul>
+    {% for suggestion in suggestion_list %}
+      <li>
+        <a>{{ suggestion.name }}</a>: "{{suggestion.suggestion_text}}"
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There have been no suggestions.</p>
+  {% endif %}       
+{% endblock %}
+</div>
+
+<!-- Footer -->
+<footer class="page-footer font-small blue pt-4">
+
+  <!-- Footer Links -->
+  <div class="container-fluid text-center text-md-left">
+
+    <!-- Grid row -->
+    <div class="row">
+
+      <!-- Grid column -->
+      <div class="col-md-6 mt-md-0 mt-3">
+
+        <!-- Content -->
+        <h5 class="text-uppercase">Jay's Django Project</h5>
+        <p>Author: Jay Rothenberger</p>
+
+      </div>
+      <!-- Grid column -->
+    </div>
+    <!-- Grid row -->
+
+  </div>
+  <!-- Footer Links -->
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2020 Copyright:
+    <a> Jay Rothenberger</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->

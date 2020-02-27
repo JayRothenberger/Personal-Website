@@ -1,0 +1,25 @@
+li a {
+    color: white;
+}
+html, body {
+    height: 100%;
+    width: 100%;
+    background: white url("images/background.gif") no-repeat;
+    background-size: cover;
+    #background-position: center;
+    color: white;
+}
+.footer {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    margin-top: -150px; /* negative value of footer height */
+    height: 150px;
+    clear:both;
+    padding-top:20px;
+} 
+.iframe {
+    
+    bottom: 0px;
+    
+}

@@ -1,0 +1,27 @@
+<!-- TODO: make a view, url, and html for searching for images.  Use the question example view and page as an example for returning appropriate images -->
+{% load static %}
+<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+
+<html>
+    {% block content %}
+    <form method='post'>
+        {% csrf_token %}
+        <a>tag: </a><input type='text' name='tag'>
+        <button type='submit'>search</button>
+    </form>
+    {% endblock %}
+    <body>
+    <link rel="stylesheet" type="text/css" href="{% static 'personal/style.css' %}">
+{% if iids %}
+    <ul>
+    {% for iid in iids %}
+        <img src="{% static 'personal/images/' %}{{ iid.image_ID }}.png">{{ iid }}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Search for an image using a single tag</p>
+{% endif %}
+</div>
+</div>
+</body>
+</html>

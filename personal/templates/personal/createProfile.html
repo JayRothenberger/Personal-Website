@@ -1,0 +1,12 @@
+{% block content %}
+<h2>New User</h2>
+<form method='post' enctype='multipart/form-data'>
+    {% csrf_token %}
+    <a>resume: </a><input type='file' name='resume'>
+    <a>username: </a><input type='text' name='pid'>
+    <a>password: </a><input type='text' name='pword'>
+    <a>display name: </a><input type='text' name='dname'>
+    <a>bio: </a><input type='text' name='bio'>
+    <button type='submit'>Create User</button>
+</form>
+{% endblock %}
