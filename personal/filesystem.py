@@ -4,8 +4,9 @@ import os
 def handle_image_upload(f, fname, iid, tags):
     #don't try to say if not exists, throws error for a reason I don't understand
     ext = fname.split('.')[1]
-    if(os.path.exists('personal/static/personal/images/'+iid+'.'+ext)):
-        return handle_image_upload(f, iid+'a', tags)
+    exist = ImageFile.objects.filter(image_ID=iid)
+    if(os.path.exists('personal/static/personal/images/'+iid+'.'+ext)|exist.exists()):
+        return handle_image_upload(f, fname, iid+'a', tags)
     else:
         image = ImageFile(image_ID=iid,tags=tags,ext=ext)
         image.save()
