@@ -15,7 +15,7 @@
 {% if iids %}
     <ul>
     {% for iid in iids %}
-        <img src="{% static 'personal/images/' %}{{iid.image_ID}}{{iid.ext}}">{{ iid }}
+        <img src="{% static 'personal/images/' %}{{iid.image_ID}}.{{iid.ext}}">{{ iid }}
     {% endfor %}
     </ul>
 {% else %}
