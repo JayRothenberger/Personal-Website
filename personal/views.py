@@ -12,10 +12,10 @@ from .models import Choice, Question, Suggestion, Profile, ImageFile, MatchDetai
 from .forms import UploadFileForm, CreateNewProfileForm, ImageSearchForm
 from .filesystem import handle_image_upload, handle_create_new_user
 
-from asteval import Interpreter
 
 from riotwatcher import LolWatcher, ApiError
 import pandas as pd
+from asteval import Interpreter
 
 #globals
 api_key = APIKey.objects.latest('time').key #this should come from db in production
