@@ -18,8 +18,11 @@ import pandas as pd
 from asteval import Interpreter
 
 #globals
-api_key = APIKey.objects.latest('time').key #this should come from db in production
-watcher = LolWatcher(api_key)
+try:
+    api_key = APIKey.objects.latest('time').key #this should come from db in production
+    watcher = LolWatcher(api_key)
+except:
+    pass
 
 # class declarations
 class ProfileView(generic.base.View):
