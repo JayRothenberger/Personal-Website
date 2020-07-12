@@ -88,8 +88,9 @@ def APICall(call='matchlist_by_account', args={'summoner':'Small_Crawler', 'regi
             return {'matches':[]}
 
 def updateMatchHistory(summoner='Small_Crawler', region='na1', return_latest=True, to_return=1):
-    latest_detail = MatchHistory.objects.latest('time') #this is wrong, but won't be an issue unless there is more than one summoner in the db
+     #this is wrong, but won't be an issue unless there is more than one summoner in the db
     try:
+        latest_detail = MatchHistory.objects.latest('time')
         begin = latest_detail.time + 1
     except Exception as e: # if there happens to be no object
         print(e, 'could not get latest detail time')
