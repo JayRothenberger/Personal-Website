@@ -11,19 +11,67 @@
       </form>
     </li>
   {% endblock %}
-{% block content %}
-  <script>
-    window.onload = function(){
-        var button = document.getElementById("clickme");
-        var intervalId = setInterval(function(){
-            //date = new Date();
-            var count = Date.now();
-            button.innerHTML = "Globe spin count: " + count;
-        }, .001);
-    };
-  </script>
-  <button id="clickme">Globe spin count: #</button>
-{% endblock %}
 
+        {% block content %}
+        <script>hljs.initHighlightingOnLoad();</script>
+        <pre><code class="python">
+          from math import ceil
+          from math import sqrt
+          import time
+          
+          def checkPrime(x):
+            j = ceil(sqrt(x))
+            i = 2
+            while i <= j:
+                if x%i == 0:
+                    return False
+                i+=1
+            return True
 
+          start = time.time()
+          i = 0
+          arr = 0
+          primes=0
+
+          while(primes<1000000):
+              if checkPrime(i):
+                  primes+=1
+                  arr = i
+              i+=1
+          print(arr, time.time()-start)
+      
+        </code></pre>
+        <script>
+          window.onload = function(){
+              var button = document.getElementById("clickme");
+              var intervalId = setInterval(function(){
+                  //date = new Date();
+                  var count = Date.now();
+                  button.innerHTML = "Globe spin count: " + count;
+              }, .001);
+          };
+        </script>
+        <style>
+        textarea{
+          background: url(http://i.imgur.com/2cOaJ.png);
+          background-attachment: local;
+          background-repeat: no-repeat;
+          padding-left: 35px;
+          padding-top: 10px;
+          border-color:#ccc;
+          color: white;
+      }
+      </style>
+        <button id="clickme">Globe spin count: #</button>
+        <div id="ide">
+          <textarea onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" rows="10" cols="100" form="code" name='torun' value="fuck"></textarea>
+          <form id='code' method='post'>
+              {% csrf_token %}
+              <input type="submit">
+          </form>
+          <a>{{ return }} </a>
+          <a>{{ error }}</a>
+        </div>
+
+      {% endblock %}
 

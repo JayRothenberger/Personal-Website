@@ -44,7 +44,23 @@ class Profile(models.Model):
     bio = models.CharField(max_length = 280, null=True)
     display_Name = models.CharField(max_length = 64, null=False)
     pword = models.CharField(max_length = 64)
-    
-    
+
+class MatchDetail(models.Model):
+    time = models.BigIntegerField(primary_key=True)
+    data = models.TextField()
+
+class MatchHistory(models.Model):
+    time = models.BigIntegerField(primary_key=True)
+    data = models.TextField()
+    summoner = models.TextField()
+    region = models.TextField()
+
+class APICallHistory(models.Model):
+    time = models.BigIntegerField(primary_key=True)
+    desc = models.TextField()
+
+class APIKey(models.Model):
+    time = models.BigIntegerField(primary_key=True)
+    key = models.TextField()
     
     

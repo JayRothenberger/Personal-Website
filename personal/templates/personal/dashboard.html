@@ -1,0 +1,58 @@
+{% extends 'personal/base.html' %}
+
+{% block nav_items %}
+
+{% endblock %}
+
+{% block content %}
+<div class='row'>
+<div class='col-lg'>
+    <p>Most Recent Game:</p>
+    {% for entry in data %}
+    <div class="row">
+        {% for image in entry.images %}
+            <img src="{{image.url}}" width="{{image.width}}" height="{{image.height}}" onerror="this.src='https://i.imgur.com/uomkVIL.png';">
+        {% endfor %}
+        {% for text in entry.text %}
+            <span style="display:inline-block; width: 10;"></span>
+            <p style="{{text.style}}">{{text.value}}</p>
+            <span style="display:inline-block; width: 10;"></span>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <div class="row">
+        <p>History:</p>
+    </div>
+    {% for entry in history %}
+    <div class="row">
+        {% for image in entry.images %}
+        <img src="{{image.url}}" width="{{image.width}}" height="{{image.height}}" onerror="this.src='https://i.imgur.com/uomkVIL.png';">
+    {% endfor %}
+    {% for text in entry.text %}
+        <span style="display:inline-block; width: 10;"></span>
+        <p style="{{text.style}}">{{text.value}}</p>
+        <span style="display:inline-block; width: 10;"></span>
+    {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+<div class='col-xs'>
+    <canvas id='myChart' width='300' height='300'></canvas>
+</div>
+</div>
+{{ wl|json_script:"wl" }}
+<script>
+    const wl = JSON.parse(document.getElementById('wl').textContent)
+    var ctx = document.getElementById('myChart');
+    var myDoughnutChart = new Chart(ctx, 
+    {
+        "type":"doughnut",
+        "data":{"labels":["Wins","Losses"],
+                "datasets":[{"label":"Win/Loss",
+                            "data":[wl.wins,wl.losses],
+                            "backgroundColor":["rgb(0, 153, 0)","rgb(255, 0, 0)"]
+                            }]
+                }
+    });
+</script>
+{% endblock %}

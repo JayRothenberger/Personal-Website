@@ -10,4 +10,6 @@ urlpatterns = [
     path('images/<str:image_ID>/', views.serveImage, name='serveImage'),
     path('newUser/', views.create_user, name='create_user'),
     path('imageSearch/', views.imageSearch, name='imageSearch'),
+    path('riotDashboard/', views.riotDashboard, name='riotDashboard'),
+    path('test/', views.test, name='test'),
 ]
