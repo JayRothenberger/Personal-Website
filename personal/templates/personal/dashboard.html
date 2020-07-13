@@ -8,7 +8,7 @@
 <div class='row'>
 <div class='col-lg'>
     <p>Most Recent Game:</p>
-    {% for entry in data %}
+    {% for entry in history.0.content %}
     <div class="row">
         {% for image in entry.images %}
             <img src="{{image.url}}" width="{{image.width}}" height="{{image.height}}" onerror="this.src='https://i.imgur.com/uomkVIL.png';">
@@ -23,12 +23,12 @@
     <div class="row">
         <p>History:</p>
     </div>
-    {% for entry in history %}
+    {% for entry in history|slice:'1:' %}
     <div class="row">
-        {% for image in entry.images %}
+        {% for image in entry.header.images %}
         <img src="{{image.url}}" width="{{image.width}}" height="{{image.height}}" onerror="this.src='https://i.imgur.com/uomkVIL.png';">
     {% endfor %}
-    {% for text in entry.text %}
+    {% for text in entry.header.text %}
         <span style="display:inline-block; width: 10;"></span>
         <p style="{{text.style}}">{{text.value}}</p>
         <span style="display:inline-block; width: 10;"></span>

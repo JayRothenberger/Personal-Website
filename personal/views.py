@@ -182,6 +182,11 @@ def riotDashboard(request):
     match_details = updateMatchHistory(summoner=summoner,to_return=15)# call to api request manager
     match_detail = match_details[0]
 
+    history = []
+    
+    wins = 0
+    losses = 0
+
     # check league's latest version
     latest = dd.data_dragon.versions_for_region(region)['n']['champion']
     # Lets get some champions static information, dd calls
@@ -189,36 +194,13 @@ def riotDashboard(request):
     static_champ_list = dd.data_dragon.champions(latest, False, 'en_US')
     static_spell_list = dd.data_dragon.summoner_spells(latest, 'en_US')
 
-    # we'll be using this dataframe to organize and manipulate the data we will send to the page
-    participants = []
-    for row in match_detail['participants']:
-        participants_row = {}
-        participants_row['champion'] = row['championId']
-        participants_row['spell1'] = row['spell1Id']
-        participants_row['spell2'] = row['spell2Id']
-        participants_row['win'] = row['stats']['win']
-        participants_row['kills'] = row['stats']['kills']
-        participants_row['deaths'] = row['stats']['deaths']
-        participants_row['assists'] = row['stats']['assists']
-        participants_row['totalDamageDealt'] = row['stats']['totalDamageDealt']
-        participants_row['goldEarned'] = row['stats']['goldEarned']
-        participants_row['champLevel'] = row['stats']['champLevel']
-        participants_row['totalMinionsKilled'] = row['stats']['totalMinionsKilled']
-        participants_row['item0'] = row['stats']['item0']
-        participants_row['item1'] = row['stats']['item1']
-        participants_row['item2'] = row['stats']['item2']
-        participants_row['item3'] = row['stats']['item3']
-        participants_row['item4'] = row['stats']['item4']
-        participants_row['item5'] = row['stats']['item5']
-        participants.append(participants_row)
-    
     # champ static list data to dict for looking up champion names
     champ_dict = {}
     for key in static_champ_list['data']:
         row = static_champ_list['data'][key]
         champ_dict[row['key']] = row['id']
 
-    
+        
     # to convert from item id to name
     item_dict = static_item_list['data']
     for key in item_dict:
@@ -231,62 +213,9 @@ def riotDashboard(request):
     for key in static_spell_list:
         spell_dict[static_spell_list[key]['key']] = static_spell_list[key]['id']
 
-    #fixing the dataframe
-    new_col = []
-
-    for summoner in match_detail['participantIdentities']:
-        new_col.append(summoner['player']['summonerName'])
-    new_col = pd.DataFrame(new_col, columns=['summonerName'])
-
-    for row in participants:
-        row['championName'] = champ_dict[str(row['champion'])]
-
-    df = pd.DataFrame(participants)
-    df['summonerName'] = new_col
-
-    lab = list(df.columns)
-
-    wins = 0
-    losses = 0
-
-    data = []
-    for index, row in df.iterrows():
-        l = []
-        for i in lab: # my understanding of python is lacking, because idk why I have to do this sometimes
-            l.append(i) # sometimes she choses to pass something by reference instead of value
-
-        line = {}
-        for i in row:
-            line[l[0]] = i
-            l.pop(0)
-        stats = {'text':[], 'images':[]}
-        stats['images'].append(imaged(url = 'http://ddragon.leagueoflegends.com/cdn/10.13.1/img/champion/' + line['championName'] + '.png', width=50, height=50))
-        stats['images'].append(imaged(url='https://i.imgur.com/Z4PgTUN.png'))
-        stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/spell/' + spell_dict[str(int(line['spell1']))] + '.png'))
-        stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/spell/' + spell_dict[str(int(line['spell2']))] + '.png'))
-        stats['images'].append(imaged(url='https://i.imgur.com/Z4PgTUN.png'))
-        stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item0'])) + '.png'))
-        stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item1'])) + '.png'))
-        stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item2'])) + '.png'))
-        stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item3'])) + '.png'))
-        stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item4'])) + '.png'))
-        stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item5'])) + '.png'))
-        if line['win'] == True:
-            stats['text'].append(textd(style='color:green;', value='Win'))
-            if line['summonerName'] == summoner_clean:
-                wins += 1
-        else:
-            stats['text'].append(textd(style='color:red;', value='Loss'))
-            if line['summonerName'] == summoner_clean:
-                losses += 1
-        stats['text'].append(textd(value=line['summonerName']))#summoner name
-        data.append(stats)
-
-    match_details.pop(0)
-
-    history = []
     for match_detail in match_details:
-        #generate the participants dataframe for each of the matches that are not the most recent match
+        data = {'header':[], 'content':[]}
+        # we'll be using this dataframe to organize and manipulate the data we will send to the page
         participants = []
         for row in match_detail['participants']:
             participants_row = {}
@@ -308,13 +237,9 @@ def riotDashboard(request):
             participants_row['item4'] = row['stats']['item4']
             participants_row['item5'] = row['stats']['item5']
             participants.append(participants_row)
+    
 
-        new_col = []
-
-        for summoner in match_detail['participantIdentities']:
-            new_col.append(summoner['player']['summonerName'])
-        new_col = pd.DataFrame(new_col, columns=['summonerName'])
-
+        #fixing the dataframe
         new_col = []
 
         for summoner in match_detail['participantIdentities']:
@@ -326,9 +251,10 @@ def riotDashboard(request):
 
         df = pd.DataFrame(participants)
         df['summonerName'] = new_col
+
         lab = list(df.columns)
 
-        for index, row in df.loc[df['summonerName'] == summoner_clean].iterrows():
+        for index, row in df.iterrows():
             l = []
             for i in lab: # my understanding of python is lacking, because idk why I have to do this sometimes
                 l.append(i) # sometimes she choses to pass something by reference instead of value
@@ -351,13 +277,17 @@ def riotDashboard(request):
             stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item5'])) + '.png'))
             if line['win'] == True:
                 stats['text'].append(textd(style='color:green;', value='Win'))
-                wins += 1
+                if line['summonerName'] == summoner_clean:
+                    wins += 1
             else:
                 stats['text'].append(textd(style='color:red;', value='Loss'))
-                losses += 1
+                if line['summonerName'] == summoner_clean:
+                    losses += 1
             stats['text'].append(textd(value=line['summonerName']))#summoner name
-            history.append(stats)
-    
+            data['content'].append(stats)
+            if line['summonerName'] == summoner_clean:
+                data['header'] = stats
+        history.append(data)
 
     #lets try getting the pictures next for the items and champions
-    return render(request, 'personal/dashboard.html', {'data': data, 'history':history, 'wl':{'wins':wins, 'losses':losses}})
+    return render(request, 'personal/dashboard.html', {'history':history, 'wl':{'wins':wins, 'losses':losses}})
