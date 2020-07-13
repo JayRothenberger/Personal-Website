@@ -1,3 +1,10 @@
-{% for tags in tag %}
-<p>{{tags}}</p>
-{% endfor %}
+{% extends 'personal/base.html' %}
+{% block content %}
+
+<a href="#demo" data-toggle="collapse">Collapsible</a>
+
+<div id="demo" class="collapse">
+Lorem ipsum dolor text....
+</div>
+
+{% endblock %}

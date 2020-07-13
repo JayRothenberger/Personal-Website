@@ -179,10 +179,11 @@ def riotDashboard(request):
     summoner = "Small_Crawler"
     summoner_clean = "Small Crawler"
 
-    match_details = updateMatchHistory(summoner=summoner,to_return=15)# call to api request manager
+    match_details = updateMatchHistory(summoner=summoner,to_return=10)# call to api request manager
     match_detail = match_details[0]
 
     history = []
+    entryid = 0
     
     wins = 0
     losses = 0
@@ -283,10 +284,13 @@ def riotDashboard(request):
                 stats['text'].append(textd(style='color:red;', value='Loss'))
                 if line['summonerName'] == summoner_clean:
                     losses += 1
+            stats['text'].append(textd(value=str(line['kills'])+'/'+str(line['deaths'])+'/'+str(line['assists'])))
             stats['text'].append(textd(value=line['summonerName']))#summoner name
             data['content'].append(stats)
             if line['summonerName'] == summoner_clean:
                 data['header'] = stats
+                data['entryId'] = entryid
+                entryid += 1
         history.append(data)
 
     #lets try getting the pictures next for the items and champions

@@ -24,8 +24,9 @@
         <p>History:</p>
     </div>
     {% for entry in history|slice:'1:' %}
+    <a href="#demo{{entry.entryId}}" data-toggle="collapse">
     <div class="row">
-        {% for image in entry.header.images %}
+    {% for image in entry.header.images %}
         <img src="{{image.url}}" width="{{image.width}}" height="{{image.height}}" onerror="this.src='https://i.imgur.com/uomkVIL.png';">
     {% endfor %}
     {% for text in entry.header.text %}
@@ -34,7 +35,27 @@
         <span style="display:inline-block; width: 10;"></span>
     {% endfor %}
     </div>
+    </a>
+    <div id="demo{{entry.entryId}}" class="collapse">
+        <div class = 'col-xs'>
+        </div>
+        <div class='col-xl'>
+            {% for row in entry.content %}
+            <div class="row">
+                {% for image in row.images %}
+                    <img src="{{image.url}}" width="{{image.width}}" height="{{image.height}}" onerror="this.src='https://i.imgur.com/uomkVIL.png';">
+                {% endfor %}
+                {% for text in row.text %}
+                    <span style="display:inline-block; width: 10;"></span>
+                    <p style="{{text.style}}">{{text.value}}</p>
+                    <span style="display:inline-block; width: 10;"></span>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
     {% endfor %}
+    
 </div>
 <div class='col-xs'>
     <canvas id='myChart' width='300' height='300'></canvas>
@@ -52,7 +73,8 @@
                             "data":[wl.wins,wl.losses],
                             "backgroundColor":["rgb(0, 153, 0)","rgb(255, 0, 0)"]
                             }]
-                }
+                },
+        "options":{"cutoutPercentage":70}
     });
 </script>
 {% endblock %}

@@ -4,7 +4,7 @@ li a {
 html, body {
     height: 100%;
     width: 100%;
-    background: white url("images/background.gif") no-repeat;
+    background: black url("images/background.gif") no-repeat;
     background-size: cover;
     #background-position: center;
     color: white;
@@ -17,6 +17,7 @@ html, body {
     height: 150px;
     clear:both;
     padding-top:20px;
+    background: black;
 } 
 .iframe {
     
