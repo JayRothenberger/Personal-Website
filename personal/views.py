@@ -15,6 +15,7 @@ from .filesystem import handle_image_upload, handle_create_new_user
 from riotwatcher import LolWatcher, ApiError
 import pandas as pd
 from asteval import Interpreter
+from copy import deepcopy as copy
 
 #globals
 try:
@@ -92,7 +93,7 @@ def updateMatchHistory(summoner='Small_Crawler', region='na1', return_latest=Tru
 
 # I'm using these functions to standardize the objects I send to the template and to populate default values.
 def textd(value='', style=''):# for generating text JSON objects for the template
-    return {'value':value, 'style':style}
+    return {'value':str(value), 'style':style}
 
 def imaged(url='https://www.freeiconspng.com/uploads/red-circular-image-error-0.png', width='30', height='30', onerror='', style='', title=''):# for generating image JSON objects for the template
     return {'url':url, 'width':width, 'height':height, 'onerror':onerror, 'title':title, 'style':style}
@@ -182,7 +183,7 @@ def riotDashboard(request):
     match_details = updateMatchHistory(summoner=summoner,to_return=10)# call to api request manager
     match_detail = match_details[0]
 
-    history = []
+    history = [] # list of data dicts
     entryid = 0
     
     wins = 0
@@ -215,6 +216,7 @@ def riotDashboard(request):
         spell_dict[static_spell_list[key]['key']] = static_spell_list[key]['id']
 
     for match_detail in match_details:
+        #data = {header: summoner scoreline, content: entire scoreboard, entryId: games since most recent}
         data = {'header':[], 'content':[]}
         # we'll be using this dataframe to organize and manipulate the data we will send to the page
         participants = []
@@ -255,17 +257,31 @@ def riotDashboard(request):
 
         lab = list(df.columns)
 
+        # not using this right now, but I may want it later
+        score_headline = {'team100':{'kills':sum(df['kills'][:5]),'deaths':sum(df['deaths'][:5]),'assists':sum(df['assists'][:5])},
+                         'team200':{'kills':sum(df['kills'][5:]),'deaths':sum(df['deaths'][5:]),'assists':sum(df['assists'][5:])}}
+        
+        team100KDA = str(score_headline['team100']['kills']) + '/' + str(score_headline['team100']['deaths']) + '/' + str(score_headline['team100']['assists'])
+        team200KDA = str(score_headline['team200']['kills']) + '/' + str(score_headline['team200']['deaths']) + '/' + str(score_headline['team200']['assists'])
+
+        team100Gold = str(sum(df['goldEarned'][:5]))
+        team200Gold = str(sum(df['goldEarned'][5:]))
+
         for index, row in df.iterrows():
-            l = []
-            for i in lab: # my understanding of python is lacking, because idk why I have to do this sometimes
-                l.append(i) # sometimes she choses to pass something by reference instead of value
+            if index == 0:
+                data['content'].append({'text':[textd(match_detail['teams'][0]['win'].replace('Fail','Loss')), textd(team100KDA), textd('Gold Earned: ' + team100Gold)], 'images':[]})
+            if index == 5:
+                data['content'].append({'text':[textd(match_detail['teams'][1]['win'].replace('Fail','Loss')), textd(team200KDA), textd('Gold Earned: ' + team200Gold)], 'images':[]})
+            l = copy(lab) # my understanding of python is lacking, because idk why I have to do this sometimes
+            # sometimes she choses to pass something by reference instead of value
 
             line = {}
-            for i in row:
+            for i in row: # this is inefficient, but truly the time it took to write this comment is more than changing it will ever save
                 line[l[0]] = i
                 l.pop(0)
-            stats = {'text':[], 'images':[]}
-            stats['images'].append(imaged(url = 'http://ddragon.leagueoflegends.com/cdn/10.13.1/img/champion/' + line['championName'] + '.png', width=50, height=50))
+
+            stats = {'text':[], 'images':[], 'bgcolor':'gray'} # list of textds and imageds to be displayed on page and their bg color
+            stats['images'].append(imaged(url = 'http://ddragon.leagueoflegends.com/cdn/10.13.1/img/champion/' + line['championName'] + '.png', width=50, height=50,title=line['championName']))
             stats['images'].append(imaged(url='https://i.imgur.com/Z4PgTUN.png'))
             stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/spell/' + spell_dict[str(int(line['spell1']))] + '.png'))
             stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/spell/' + spell_dict[str(int(line['spell2']))] + '.png'))
@@ -277,21 +293,29 @@ def riotDashboard(request):
             stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item4'])) + '.png'))
             stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item5'])) + '.png'))
             if line['win'] == True:
-                stats['text'].append(textd(style='color:green;', value='Win'))
                 if line['summonerName'] == summoner_clean:
                     wins += 1
             else:
-                stats['text'].append(textd(style='color:red;', value='Loss'))
                 if line['summonerName'] == summoner_clean:
                     losses += 1
             stats['text'].append(textd(value=str(line['kills'])+'/'+str(line['deaths'])+'/'+str(line['assists'])))
             stats['text'].append(textd(value=line['summonerName']))#summoner name
-            data['content'].append(stats)
+            
             if line['summonerName'] == summoner_clean:
-                data['header'] = stats
+                data['header'] = copy(stats)
+                if line['win'] == True:
+                    data['header']['text'].append(textd(style='color:green;', value='Win'))
+                else:
+                    data['header']['text'].append(textd(style='color:red;', value='Loss'))
+
                 data['entryId'] = entryid
                 entryid += 1
+                stats['bgcolor'] = 'gold'
+            else:
+                stats['bgcolor'] = 'gray'
+
+            data['content'].append(stats)
+
         history.append(data)
 
-    #lets try getting the pictures next for the items and champions
     return render(request, 'personal/dashboard.html', {'history':history, 'wl':{'wins':wins, 'losses':losses}})
