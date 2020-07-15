@@ -215,6 +215,14 @@ def riotDashboard(request):
     for key in static_spell_list:
         spell_dict[static_spell_list[key]['key']] = static_spell_list[key]['id']
 
+    static_runes_list = watcher.data_dragon.runes_reforged(latest)
+    static_runes_list = watcher.data_dragon.runes_reforged(latest, 'en_US')
+    rune_dict = {}
+    for style in static_runes_list:
+        for rune in style['slots'][0]['runes']:
+            rune_dict[rune['id']] = rune['icon']
+
+
     for match_detail in match_details:
         #data = {header: summoner scoreline, content: entire scoreboard, entryId: games since most recent}
         data = {'header':[], 'content':[]}
@@ -239,6 +247,7 @@ def riotDashboard(request):
             participants_row['item3'] = row['stats']['item3']
             participants_row['item4'] = row['stats']['item4']
             participants_row['item5'] = row['stats']['item5']
+            participants_row['keystone_path'] = rune_dict[row['stats']['perk0']]
             participants.append(participants_row)
     
 
@@ -281,6 +290,8 @@ def riotDashboard(request):
                 l.pop(0)
 
             stats = {'text':[], 'images':[], 'bgcolor':'gray'} # list of textds and imageds to be displayed on page and their bg color
+            
+            stats['images'].append(imaged('http://ddragon.leagueoflegends.com/cdn/img/' + line['keystone_path']))
             stats['images'].append(imaged(url = 'http://ddragon.leagueoflegends.com/cdn/10.13.1/img/champion/' + line['championName'] + '.png', width=50, height=50,title=line['championName']))
             stats['images'].append(imaged(url='https://i.imgur.com/Z4PgTUN.png'))
             stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/spell/' + spell_dict[str(int(line['spell1']))] + '.png'))

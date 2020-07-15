@@ -1,5 +1,5 @@
 {% extends 'personal/base.html' %}
-
+{% load static %}
   {% block nav_items %}
 <!--
     <li class="nav-item">
@@ -35,6 +35,17 @@
           color: white;
       }
       </style>
+        <div class="row">
+            <div class="col-sm">
+                <img src="{% static 'personal/images/itsme.png' %}" title="Jay Rothenberger" href="https://github.com/JayRothenberger">
+            </div>
+          <div class="col-xl">
+            <p>It's me.  This is my personal website.  You probably got here from my GitHub, if not you can click on my face to check that out.  
+              This is a bit of a work-in-progress, so feel free to look around, but don't mind the mess.  The Riot Dashboard has a summary of
+              my recent League of Legends games that took quite a bit of time to make.  I encourage you to check that out.
+            </p>
+          </div>
+        </div>
         <button id="clickme">Globe spin count: #</button>
         <div id="ide">
           <textarea onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" rows="10" cols="100" form="code" name='torun' value="fuck"></textarea>
