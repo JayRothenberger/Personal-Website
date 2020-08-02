@@ -33,9 +33,13 @@ class MatchHistory(models.Model):
 class APICallHistory(models.Model):
     time = models.BigIntegerField(primary_key=True)
     desc = models.TextField()
+    service = models.TextField(default='Riot', null=False)
 
 class APIKey(models.Model):
     time = models.BigIntegerField(primary_key=True)
     key = models.TextField()
+    service = models.TextField(default='Riot', null=False)
     
-    
+class KrogerServiceData(models.Model):
+    time = models.BigIntegerField(primary_key=True)
+    data = models.TextField() # {brands:[''], abv_dict:{'':float()},products:{'':''},price_size:{()},loc_id_list:['']}
