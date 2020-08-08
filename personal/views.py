@@ -433,8 +433,6 @@ def riotDashboard(request):
                 l.pop(0)
 
             stats = {'text':[], 'images':[], 'bgcolor':'gray'} # list of textds and imageds to be displayed on page and their bg color
-            
-            print(line, '\n endline')
 
             stats['images'].append(imaged('http://ddragon.leagueoflegends.com/cdn/img/' + line['keystone_path']))
             stats['images'].append(imaged(url = 'http://ddragon.leagueoflegends.com/cdn/10.13.1/img/champion/' + line['championName'] + '.png', width=50, height=50,title=line['championName']))
