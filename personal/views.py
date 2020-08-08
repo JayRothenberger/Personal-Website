@@ -483,3 +483,29 @@ def krogerDashboard(request):
     except:
         data = []
     return render(request, 'personal/test.html', {'data':data})
+
+def resume(request):
+    return render(request, 'personal/resume.html')
+
+def ide(request):
+    if request.method == 'POST':
+        c = open("c.txt", "w")
+        aeval = Interpreter(writer=c)
+
+        try:
+            torun = request.POST.get('torun')
+            print(torun)
+            aeval(torun)
+            c.close()
+            c = open("c.txt", "r")
+            rax = '\n'
+            rax = rax.join(c.readlines())
+            return render(request, 'personal/ide.html', {'error': '', 'return': str(rax)})
+            c.close()
+        except Exception as e:
+            c.close()
+            error = e
+            return render(request, 'personal/ide.html', {'error': str(e), 'return': ''})
+        
+        return render(request, 'personal/ide.html', {'error': str(e), 'return': str(rax)})
+    return render(request, 'personal/ide.html')

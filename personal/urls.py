@@ -12,5 +12,7 @@ urlpatterns = [
     path('riotDashboard/', views.riotDashboard, name='riotDashboard'),
     path('test/', views.test, name='test'),
     path('codeSamples/', views.code, name='code'),
-    path('krogerDashboard/', views.krogerDashboard, name='krogerDashboard')
+    path('krogerDashboard/', views.krogerDashboard, name='krogerDashboard'),
+    path('resume/', views.resume, name='resume'),
+    path('ide/', views.ide, name='ide'),
 ]

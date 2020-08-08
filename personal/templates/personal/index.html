@@ -1,43 +1,12 @@
 {% extends 'personal/base.html' %}
 {% load static %}
   {% block nav_items %}
-<!--
-    <li class="nav-item">
-      <form method="post" class="nav-link">
-        {% csrf_token %}
-        <label for="dest">Go to user profile:</label>
-        <input type="text" id="dest" name="dest" value="John">
-        <input type="submit" value="Go">
-      </form>
-    </li>
-    -->
   {% endblock %}
 
         {% block content %}
-        <script>
-          window.onload = function(){
-              var button = document.getElementById("clickme");
-              var intervalId = setInterval(function(){
-                  //date = new Date();
-                  var count = Date.now();
-                  button.innerHTML = "Globe spin count: " + count;
-              }, .001);
-          };
-        </script>
-        <style>
-        textarea{
-          background: url(http://i.imgur.com/2cOaJ.png);
-          background-attachment: local;
-          background-repeat: no-repeat;
-          padding-left: 35px;
-          padding-top: 10px;
-          border-color:#ccc;
-          color: white;
-      }
-      </style>
         <div class="row">
             <div class="col-sm">
-                <img src="{% static 'personal/images/itsme.png' %}" title="Jay Rothenberger" href="https://github.com/JayRothenberger">
+              <a href="https://github.com/JayRothenberger" target="_blank"><img class="img-thumbnail" src="{% static 'personal/images/itsme.png' %}" title="Jay Rothenberger"></a>
             </div>
           <div class="col-xl">
             <p>It's me.  This is my personal website.  You probably got here from my GitHub, if not you can click on my face to check that out.  
@@ -45,17 +14,10 @@
               my recent League of Legends games that took quite a bit of time to make.  I encourage you to check that out.
             </p>
           </div>
+          <div class="col-xl"></div>
         </div>
-        <button id="clickme">Globe spin count: #</button>
-        <div id="ide">
-          <textarea onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" rows="10" cols="100" form="code" name='torun' value="fuck"></textarea>
-          <form id='code' method='post'>
-              {% csrf_token %}
-              <input type="submit">
-          </form>
-          <a>{{ return }} </a>
-          <a>{{ error }}</a>
-        </div>
+        <br>
+        <br>
 
       {% endblock %}
 

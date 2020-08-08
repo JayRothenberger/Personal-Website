@@ -1,0 +1,30 @@
+{% extends 'personal/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+        textarea{
+          background: url(http://i.imgur.com/2cOaJ.png);
+          background-attachment: local;
+          background-repeat: no-repeat;
+          padding-left: 35px;
+          padding-top: 10px;
+          border-color:#ccc;
+          color: white;
+          font-size: 11.3px;
+          font-family: Courier;
+      }
+      </style>
+<a>Run some python code here:</a>
+<br>
+<div id="ide">
+  <textarea style="width: 100%;" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" rows="10" cols="100" form="code" name='torun' value="fuck"></textarea>
+  <form id='code' method='post'>
+      {% csrf_token %}
+      <div class="form-group">
+          <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+  </form>
+  <a>{{ return }} </a>
+  <a>{{ error }}</a>
+</div>
+{% endblock %}
