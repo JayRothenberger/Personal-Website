@@ -11,8 +11,11 @@
     function runPy(code, id){
         try
         {
+        document.getElementById(id).innerHTML = "running..."
+        document.getElementById(id).style = "color: red;"
         $.get("http://www.jayrothenberger.com/run/", {'torun': code}, function(data, status){
             data = JSON.parse(data)['return']
+            document.getElementById(id).style = "color: green;"
             document.getElementById(id).innerHTML = data
             })
         }catch(err){alert(err)}
