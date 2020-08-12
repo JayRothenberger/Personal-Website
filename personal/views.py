@@ -524,15 +524,19 @@ def run(request):
         rax = '\n'
         rax = rax.join(f.readlines())
         response = HttpResponse()
-        response.content = json.dumps({'error': '', 'return': str(rax)})
-        print(str(rax))
+        try:
+            er = aeval.error[0].get_error()
+        except:
+            er = ''
+        response.content = json.dumps({'error': er, 'return': str(rax)})
+        print(response.content)
         return response
         f.close()
     except Exception as e:
-        print(e)
         f.close()
         error = e
         response = HttpResponse()
         response.content = json.dumps({'error': str(e), 'return': ''})
+        print(response.content)
         return response
     

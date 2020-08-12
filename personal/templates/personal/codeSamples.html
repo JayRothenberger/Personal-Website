@@ -12,11 +12,16 @@
         try
         {
         document.getElementById(id).innerHTML = "running..."
-        document.getElementById(id).style = "color: red;"
+        document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: red;"
         $.get("http://www.jayrothenberger.com/run/", {'torun': code}, function(data, status){
-            data = JSON.parse(data)['return']
-            document.getElementById(id).style = "color: green;"
-            document.getElementById(id).innerHTML = data
+            data = JSON.parse(data)
+            document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: green;overflow-y: scroll;"
+            document.getElementById(id).innerHTML = data['return']
+
+            if(data['return'] == ''){
+                document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: red;overflow-y: scroll;"
+                document.getElementById(id).innerHTML = "error: " + data["error"]
+            }
             })
         }catch(err){alert(err)}
     }
@@ -61,6 +66,11 @@
     .python{
 
         padding-left: 5%;
+
+    }
+    .ovf{
+
+        overflow: "scroll" !important;
 
     }
 
@@ -126,7 +136,7 @@ print(arr)
     </div>
     <div class="card-body" style="color:black">
         <h5 class="card-title">Output:</h5>
-        <p id="primeVerifyReturn"> </p>
+        <textarea id="primeVerifyReturn" class="form-control" readonly></textarea>
     </div>
 </div>
 <div class="card">
@@ -170,7 +180,7 @@ print($in1, power3($in1))
         </div>
         <div class="card-body" style="color:black">
             <h5 class="card-title">Output:</h5>
-            <p id="power3Return"> </p>
+            <textarea id="power3Return" class="form-control" readonly></textarea>
         </div>
     </div>
     <div class="card">
@@ -235,7 +245,7 @@ print(minSwaps(a, b))
         </div>
         <div class="card-body" style="color:black">
             <h5 class="card-title">Output:</h5>
-            <p id="minSwapsReturn"> </p>
+            <textarea id="minSwapsReturn" class="form-control" readonly></textarea>
         </div>
     </div>
 {% endblock %}

@@ -7,24 +7,43 @@
           background-attachment: local;
           background-repeat: no-repeat;
           padding-left: 35px;
-          padding-top: 10px;
+          padding-top: 10px !important;
           border-color:#ccc;
           color: white;
-          font-size: 11.3px;
+          font-size: 11.3px !important;
           font-family: Courier;
       }
       </style>
-<a>Run some python code here:</a>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function runPy(){
+        id = "out"
+        code = document.getElementById("codeArea").value
+        try
+        {
+        document.getElementById(id).innerHTML = "running..."
+        document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: red;background:white;"
+        $.get("http://www.jayrothenberger.com/run/", {'torun': code}, function(data, status){
+            data = JSON.parse(data)
+            document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: green;overflow-y: scroll; padding-left: 30px !important; background:white;"
+            document.getElementById(id).innerHTML = data['return']
+            if(data['return'] == ''){
+                document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: red;overflow-y: scroll; padding-left: 30px !important; background:white;"
+                document.getElementById(id).innerHTML = "error: " + data["error"]
+            }
+            })
+        }catch(err){alert(err)}
+    }
+
+</script>
+<h5 class="card-title">Run some python code here:</h5>
 <br>
 <div id="ide">
-  <textarea style="width: 100%;" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" rows="10" cols="100" form="code" name='torun' value="fuck"></textarea>
-  <form id='code' method='post'>
-      {% csrf_token %}
+  <textarea id="codeArea" class="form-control" style="width: 100%; padding-left: 30px;" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}" rows="10" cols="100" form="code" name='torun' value="fuck"></textarea>
       <div class="form-group">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-success" onclick="runPy()" style="margin-top: 10px;">Run</button>
       </div>
-  </form>
-  <a>{{ return }} </a>
-  <a>{{ error }}</a>
+      <h5 class="card-title">Output:</h5>
+      <textarea id="out" class="form-control" style="background:white;" readonly></textarea>
 </div>
 {% endblock %}
