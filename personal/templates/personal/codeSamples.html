@@ -79,7 +79,7 @@
     <div class="card-header" style="color:black">
         <div class="row">
             <div class="col align-self-center">
-                Prime Verifier
+                Nth Prime Calculator
             </div>
             <div class="col align-self-center" style="text-align: right;">
                 <button type="button" class="btn btn-success" onclick="primeVerify()">Run</button>
@@ -100,6 +100,10 @@
     </div>
     <div class="card-body">
         <pre><code id="primeVerifyCode" class="python" style="background-color: white">
+# code that calculates the nth prime in-place
+# less efficient than a sieve, but it is built on a function that verifies faster than the sieve could
+# in1: nth prime to find (int)
+
 def floor(n):
     return int(n // 1)
 
@@ -164,6 +168,10 @@ print(arr)
         </div>
         <div class="card-body">
             <pre><code id="power3Code" class="python" style="background-color: white">
+# code that verifies whether a number is divisible by 3
+# this solution is dynamic, which means it is both more interesting and less functional than an iterative solution
+# in1: number to verify (int)
+
 def power3(n):
     if n == 3 or n == 6 or n == 9:
         return True
@@ -199,7 +207,7 @@ print($in1, power3($in1))
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">in1</span>
                             </div>
-                            <input id="minSwapsIn1" type="text" class="form-control" placeholder="[]" aria-label="in1" aria-describedby="basic-addon1">
+                            <input id="minSwapsIn1" type="text" class="form-control" placeholder="list(range(len(a)))" aria-label="in1" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col">
@@ -207,13 +215,18 @@ print($in1, power3($in1))
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">in2</span>
                             </div>
-                            <input id="minSwapsIn2" type="text" class="form-control" placeholder="[range(len(in1))]" aria-label="in2" aria-describedby="basic-addon1">
+                            <input id="minSwapsIn2" type="text" class="form-control" placeholder="[]" aria-label="in2" aria-describedby="basic-addon1">
                     </div>
                 </div>
             </div>
         </div>
         <div class="card-body">
             <pre><code id="minSwapsCode" class="python" style="background-color: white">
+# code to calculate the minimum number of element swaps to order a list
+# in2: elements to sort
+# in1: correct position of each element of the corresponding index (list of ints)
+
+
 def swap(arr, a, b):
     arr[a], arr[b] = arr[b], arr[a]
     return arr
@@ -229,7 +242,6 @@ def minSwaps(arr1, arr2):
     arrSorted.sort()
 
     swaps = 0
-    print(arr)
     while arr != arrSorted:
         for i in range(len(arr)):
             if arr[i][1] != i:
@@ -237,10 +249,14 @@ def minSwaps(arr1, arr2):
                 swaps +=1
     return swaps
 
-a = $in1
-b = $in2
+a = $in2
+b = $in1
 
-print(minSwaps(a, b))
+sorted = list(range(len(a)))
+for i in range(len(a)):
+    sorted[b[i]] = a[i]
+
+print(minSwaps(a, b, sorted))
             </code></pre>
         </div>
         <div class="card-body" style="color:black">
