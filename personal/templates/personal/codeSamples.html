@@ -5,105 +5,234 @@
 {% endblock %}
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
+<script>
+    function runPy(code, id){
+        try
+        {
+        $.get("http://www.jayrothenberger.com/run/", {'torun': code}, function(data, status){
+            data = JSON.parse(data)['return']
+            document.getElementById(id).innerHTML = data
+            })
+        }catch(err){alert(err)}
+    }
+
+    function minSwaps(){
+
+        in1 = document.getElementById("minSwapsIn1").value
+        in2 = document.getElementById("minSwapsIn2").value
+
+        code = document.getElementById("minSwapsCode").innerText.replace(RegExp(/\$in1/, "g"), in1).replace(RegExp(/\$in2/, "g"), in2)
+        
+        runPy(code, "minSwapsReturn")
+
+    }
+
+    function primeVerify(){
+
+        in1 = document.getElementById("primeVerifyIn1").value
+
+        code = document.getElementById("primeVerifyCode").innerText.replace(RegExp(/\$in1/, "g"), in1)
+
+        runPy(code, "primeVerifyReturn")
+
+    }
+
+    function power3(){
+
+        in1 = document.getElementById("power3In1").value
+        
+        code = document.getElementById("power3Code").innerText.replace(RegExp(/\$in1/, "g"), in1)
+        runPy(code, "power3Return")
+
+    }
+
+</script>
 <style>
     .card{
 
         margin-bottom: 10 !important;
 
     }
+    .python{
+
+        padding-left: 5%;
+
+    }
 
 </style>
 <div class="card">
     <div class="card-header" style="color:black">
-        Prime Verifier
+        <div class="row">
+            <div class="col align-self-center">
+                Prime Verifier
+            </div>
+            <div class="col align-self-center" style="text-align: right;">
+                <button type="button" class="btn btn-success" onclick="primeVerify()">Run</button>
+            </div>
+        </div>
+        <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">in1</span>
+                            </div>
+                            <input id="primeVerifyIn1" type="text" class="form-control" placeholder="10" aria-label="in1" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                </div>
+            </div>
     </div>
     <div class="card-body">
-        <pre><code class="python" style="background-color: white">
-        from math import ceil
-        from math import sqrt
-        import time
-                    
-        def checkPrime(x):
-            j = ceil(sqrt(x))
-            i = 2
-            while i <= j:
-                if x%i == 0:
-                    return False
-                i+=1
-            return True
-                
-        start = time.time()
-        i = 0
-        arr = 0
-        primes=0
-                
-        while(primes<1000000):
-            if checkPrime(i):
-                primes+=1
-                arr = i
-            i+=1
-        print(arr, time.time()-start)
+        <pre><code id="primeVerifyCode" class="python" style="background-color: white">
+def floor(n):
+    return int(n // 1)
+
+def ciel(n):
+    if n - floor(n) > 0:
+        return floor(n) + 1
+    else:
+        return floor(n)
+
+def sqrt(n):
+    return n**.5
+            
+def checkPrime(x):
+    j = ceil(sqrt(x))
+    i = 2
+    while i <= j:
+        if x%i == 0:
+            return False
+        i+=1
+    return True
+        
+i = 2
+arr = 0
+primes= 0
+        
+while(primes<$in1):
+    if checkPrime(i):
+        primes+=1
+        arr = i
+    i+=1
+print(arr)
                     
         </code></pre>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">Output:</h5>
+        <p id="primeVerifyReturn"> </p>
     </div>
 </div>
 <div class="card">
         <div class="card-header" style="color:black">
-            Recursive Power of 3 Verifier
+            <div class="row">
+                <div class="col align-self-center">
+                    Recursive Power of 3 Verifier
+                </div>
+                <div class="col align-self-center" style="text-align: right;">
+                    <button type="button" class="btn btn-success" onclick="power3()">Run</button>
+                </div>
+            </div>
+            <div class="row">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">in1</span>
+                                </div>
+                                <input id="power3In1" type="text" class="form-control" placeholder="10" aria-label="in1" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col">
+                </div>
+            </div>
         </div>
         <div class="card-body">
-            <pre><code class="python" style="background-color: white">
-        def power3(n):
-            if n == 3 or n == 6 or n == 9:
-                return True
-            if n < 10:
-                return False
-            digits = str(n)
-            sumDigits = 0
-            for i in digits:
-                sumDigits += int(i)
-            return power3(sumDigits)
-        
-        for i in range(100):
-            print(i, power3(i))
+            <pre><code id="power3Code" class="python" style="background-color: white">
+def power3(n):
+    if n == 3 or n == 6 or n == 9:
+        return True
+    if n < 10:
+        return False
+    digits = str(n)
+    sumDigits = 0
+    for i in digits:
+        sumDigits += int(i)
+    return power3(sumDigits)
+
+print($in1, power3($in1))
             </code></pre>
+        </div>
+        <div class="card-body" style="color:black">
+            <h5 class="card-title">Output:</h5>
+            <p id="power3Return"> </p>
         </div>
     </div>
     <div class="card">
         <div class="card-header" style="color:black">
-            Minimum Swaps to Sorted Array Calculator
+            <div class="row">
+                <div class="col align-self-center">
+                    Minimum Swaps to Sorted Array Calculator
+                </div>
+                <div class="col align-self-center" style="text-align: right;">
+                    <button type="button" class="btn btn-success" onclick="minSwaps()">Run</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">in1</span>
+                            </div>
+                            <input id="minSwapsIn1" type="text" class="form-control" placeholder="[]" aria-label="in1" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">in2</span>
+                            </div>
+                            <input id="minSwapsIn2" type="text" class="form-control" placeholder="[range(len(in1))]" aria-label="in2" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card-body">
-            <pre><code class="python" style="background-color: white">
-        def swap(arr, a, b):
-            arr[a], arr[b] = arr[b], arr[a]
-            return arr
-        
-        def minSwaps(arr1, arr2):
-            arr = []
-            for i in range(len(arr1)):
-                arr.append((arr1[i], arr2[i]))
-        
-            arrSorted = []
-            for i in arr: arrSorted.append(i)
-        
-            arrSorted.sort(key=lambda arr: arr[1])
-        
-            swaps = 0
-            print(arr)
-            while arr != arrSorted:
-                for i in range(len(arr)):
-                    if arr[i][1] != i:
-                        arr = swap(arr, i, arr[i][1])
-                        swaps +=1
-            return swaps
-        
-        a = [3, 2, 1]
-        b = [2, 1, 0]
-        
-        print(minSwaps(a, b))
+            <pre><code id="minSwapsCode" class="python" style="background-color: white">
+def swap(arr, a, b):
+    arr[a], arr[b] = arr[b], arr[a]
+    return arr
+
+def minSwaps(arr1, arr2):
+    arr = []
+    for i in range(len(arr1)):
+        arr.append((arr1[i], arr2[i]))
+
+    arrSorted = []
+    for i in arr: arrSorted.append(i)
+
+    arrSorted.sort()
+
+    swaps = 0
+    print(arr)
+    while arr != arrSorted:
+        for i in range(len(arr)):
+            if arr[i][1] != i:
+                arr = swap(arr, i, arr[i][1])
+                swaps +=1
+    return swaps
+
+a = $in1
+b = $in2
+
+print(minSwaps(a, b))
             </code></pre>
+        </div>
+        <div class="card-body" style="color:black">
+            <h5 class="card-title">Output:</h5>
+            <p id="minSwapsReturn"> </p>
         </div>
     </div>
 {% endblock %}

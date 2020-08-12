@@ -15,4 +15,5 @@ urlpatterns = [
     path('krogerDashboard/', views.krogerDashboard, name='krogerDashboard'),
     path('resume/', views.resume, name='resume'),
     path('ide/', views.ide, name='ide'),
+    path('run/', views.run, name='run'),
 ]

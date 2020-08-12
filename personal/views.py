@@ -3,6 +3,7 @@ import json
 from copy import deepcopy as copy
 
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
@@ -509,3 +510,29 @@ def ide(request):
         
         return render(request, 'personal/ide.html', {'error': str(e), 'return': str(rax)})
     return render(request, 'personal/ide.html')
+
+def run(request):
+    f = open("f.txt", "w")
+    aeval = Interpreter(writer=f)
+
+    try:
+        torun = request.GET.get('torun')
+        print(torun)
+        aeval(torun)
+        f.close()
+        f = open("f.txt", "r")
+        rax = '\n'
+        rax = rax.join(f.readlines())
+        response = HttpResponse()
+        response.content = json.dumps({'error': '', 'return': str(rax)})
+        print(str(rax))
+        return response
+        f.close()
+    except Exception as e:
+        print(e)
+        f.close()
+        error = e
+        response = HttpResponse()
+        response.content = json.dumps({'error': str(e), 'return': ''})
+        return response
+    
