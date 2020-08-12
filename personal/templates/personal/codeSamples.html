@@ -6,31 +6,104 @@
 
 {% block content %}
 <script>hljs.initHighlightingOnLoad();</script>
-<pre><code class="python">
-  from math import ceil
-  from math import sqrt
-  import time
-  
-  def checkPrime(x):
-    j = ceil(sqrt(x))
-    i = 2
-    while i <= j:
-        if x%i == 0:
-            return False
-        i+=1
-    return True
+<style>
+    .card{
 
-  start = time.time()
-  i = 0
-  arr = 0
-  primes=0
+        margin-bottom: 10 !important;
 
-  while(primes<1000000):
-      if checkPrime(i):
-          primes+=1
-          arr = i
-      i+=1
-  print(arr, time.time()-start)
+    }
 
-</code></pre>
+</style>
+<div class="card">
+    <div class="card-header" style="color:black">
+        Prime Verifier
+    </div>
+    <div class="card-body">
+        <pre><code class="python" style="background-color: white">
+        from math import ceil
+        from math import sqrt
+        import time
+                    
+        def checkPrime(x):
+            j = ceil(sqrt(x))
+            i = 2
+            while i <= j:
+                if x%i == 0:
+                    return False
+                i+=1
+            return True
+                
+        start = time.time()
+        i = 0
+        arr = 0
+        primes=0
+                
+        while(primes<1000000):
+            if checkPrime(i):
+                primes+=1
+                arr = i
+            i+=1
+        print(arr, time.time()-start)
+                    
+        </code></pre>
+    </div>
+</div>
+<div class="card">
+        <div class="card-header" style="color:black">
+            Recursive Power of 3 Verifier
+        </div>
+        <div class="card-body">
+            <pre><code class="python" style="background-color: white">
+        def power3(n):
+            if n == 3 or n == 6 or n == 9:
+                return True
+            if n < 10:
+                return False
+            digits = str(n)
+            sumDigits = 0
+            for i in digits:
+                sumDigits += int(i)
+            return power3(sumDigits)
+        
+        for i in range(100):
+            print(i, power3(i))
+            </code></pre>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" style="color:black">
+            Minimum Swaps to Sorted Array Calculator
+        </div>
+        <div class="card-body">
+            <pre><code class="python" style="background-color: white">
+        def swap(arr, a, b):
+            arr[a], arr[b] = arr[b], arr[a]
+            return arr
+        
+        def minSwaps(arr1, arr2):
+            arr = []
+            for i in range(len(arr1)):
+                arr.append((arr1[i], arr2[i]))
+        
+            arrSorted = []
+            for i in arr: arrSorted.append(i)
+        
+            arrSorted.sort(key=lambda arr: arr[1])
+        
+            swaps = 0
+            print(arr)
+            while arr != arrSorted:
+                for i in range(len(arr)):
+                    if arr[i][1] != i:
+                        arr = swap(arr, i, arr[i][1])
+                        swaps +=1
+            return swaps
+        
+        a = [3, 2, 1]
+        b = [2, 1, 0]
+        
+        print(minSwaps(a, b))
+            </code></pre>
+        </div>
+    </div>
 {% endblock %}
