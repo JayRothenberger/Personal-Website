@@ -13,7 +13,7 @@
         {
         document.getElementById(id).innerHTML = "running..."
         document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: red;"
-        $.get("http://www.jayrothenberger.com/run/", {'torun': code}, function(data, status){
+        $.get("http://localhost:8000/run/", {'torun': code}, function(data, status){
             data = JSON.parse(data)
             document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: green;overflow-y: scroll;"
             document.getElementById(id).innerHTML = data['return']
@@ -26,13 +26,24 @@
         }catch(err){alert(err)}
     }
 
+    function binAdd(){
+
+        in1 = document.getElementById("binAddIn1").value
+        in2 = document.getElementById("binAddIn2").value
+
+        code = document.getElementById("binAddCode").innerText.replace(RegExp(/\$in1/, "g"), in1).replace(RegExp(/\$in2/, "g"), in2)
+        
+        runPy(code, "binAddReturn")
+
+    }
+
     function minSwaps(){
 
         in1 = document.getElementById("minSwapsIn1").value
         in2 = document.getElementById("minSwapsIn2").value
 
         code = document.getElementById("minSwapsCode").innerText.replace(RegExp(/\$in1/, "g"), in1).replace(RegExp(/\$in2/, "g"), in2)
-        
+
         runPy(code, "minSwapsReturn")
 
     }
@@ -75,6 +86,104 @@
     }
 
 </style>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-center">
+                Binary Addition Calculator
+            </div>
+            <div class="col align-self-center" style="text-align: right;">
+                <button type="button" class="btn btn-success" onclick="binAdd()">Run</button>
+            </div>
+        </div>
+        <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">in1</span>
+                            </div>
+                            <input id="binAddIn1" type="text" class="form-control" placeholder="10110" aria-label="in1" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">in2</span>
+                            </div>
+                            <input id="binAddIn2" type="text" class="form-control" placeholder="11" aria-label="in2" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="card-body">
+        <pre><code id="binAddCode" class="python" style="background-color: white">
+# code that calculates the sum of two binary numbers given as strings
+# the result will print twice as I have done it the hard and informative, and the easy and correct ways
+nums = ['$in1', '$in2']
+
+# correct way to do this is use the lambda functionality with the key arg of the min/max functions
+# my online python compiler does not support that functionality
+def compArray(arr1, arr2):
+    if len(arr1) > len(arr2):
+        return [arr1, arr2]
+    return [arr2, arr1]
+
+def binAdd(nums):
+    x, y = nums[0], nums[1]
+    x = list(x[::-1])
+    for i in range(len(x)): x[i] = int(x[i])
+    y = list(y[::-1])
+    for i in range(len(y)): y[i] = int(y[i])
+
+    smaller = compArray(x, y)[1]
+    greater = compArray(x, y)[0]
+    s = []
+    prev = 0
+    for i in range(len(smaller)):
+        d1 = smaller[i]
+        d2 = greater[i]
+        curr = d1 + d2
+        n = curr + prev - 2
+        d = 0
+
+        if n == 1 or n == -1:
+            d = 1
+        if n >= 0:
+            prev = 1
+
+        s.append(d)
+
+    for i in range(len(greater) - len(smaller)):
+        d1 = greater[i + len(smaller)]
+        n = d1 + prev
+        d = 0  # technically you do not need this, as the previous d is still accessible
+
+        if n < 2:
+            d = n
+            prev = 0
+        else:
+            d = n-2
+            prev = 1
+
+        s.append(d)
+
+    if(prev):
+        s.append(prev)
+
+    for i in range(len(s)): s[i] = str(s[i])
+    return(''.join(s[::-1]))
+# the hard way
+print(binAdd(nums))
+# the right way
+print(str(bin(int(nums[0], base=2) + int(nums[1], base=2))).replace('0b', ''))
+                    
+        </code></pre>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">Output:</h5>
+        <textarea id="binAddReturn" class="form-control" readonly></textarea>
+    </div>
+</div>
 <div class="card">
     <div class="card-header" style="color:black">
         <div class="row">
