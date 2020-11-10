@@ -74,10 +74,10 @@
     var myDoughnutChart = new Chart(ctx, 
     {
         "type":"doughnut",
-        "data":{"labels":["Wins","Losses"],
+        "data":{"labels":["Losses","Wins"],
                 "datasets":[{"label":"Win/Loss",
-                            "data":[wl.wins,wl.losses],
-                            "backgroundColor":["rgb(0, 153, 0)","rgb(255, 0, 0)"]
+                            "data":[wl.losses, wl.wins],
+                            "backgroundColor":["rgb(255, 0, 0)","rgb(0, 153, 0)"],
                             }]
                 },
         "options":{"cutoutPercentage":70}
