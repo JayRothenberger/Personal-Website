@@ -335,6 +335,7 @@ def riotDashboard(request):
 
     # check league's latest version
     latest = dd.data_dragon.versions_for_region(region)['n']['champion']
+    print(dd.data_dragon.versions_for_region(region))
     # Lets get some champions static information, dd calls
     static_item_list = dd.data_dragon.items(latest, 'en_US')
     static_champ_list = dd.data_dragon.champions(latest, False, 'en_US')
@@ -436,20 +437,20 @@ def riotDashboard(request):
             stats = {'text':[], 'images':[], 'bgcolor':'gray'} # list of textds and imageds to be displayed on page and their bg color
 
             stats['images'].append(imaged('http://ddragon.leagueoflegends.com/cdn/img/' + line['keystone_path']))
-            stats['images'].append(imaged(url = 'http://ddragon.leagueoflegends.com/cdn/10.13.1/img/champion/' + line['championName'] + '.png', width=50, height=50,title=line['championName']))
+            stats['images'].append(imaged(url = 'http://ddragon.leagueoflegends.com/cdn/' + latest + '/img/champion/' + line['championName'] + '.png', width=50, height=50,title=line['championName']))
             stats['images'].append(imaged(url='https://i.imgur.com/Z4PgTUN.png'))
             try: # bots do not take summoner spells
-                stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/spell/' + spell_dict[str(int(line['spell1']))] + '.png'))
-                stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/spell/' + spell_dict[str(int(line['spell2']))] + '.png'))
+                stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/' + latest + '/img/spell/' + spell_dict[str(int(line['spell1']))] + '.png'))
+                stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/' + latest + '/img/spell/' + spell_dict[str(int(line['spell2']))] + '.png'))
             except:
                 pass
             stats['images'].append(imaged(url='https://i.imgur.com/Z4PgTUN.png'))
-            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item0'])) + '.png'))
-            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item1'])) + '.png'))
-            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item2'])) + '.png'))
-            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item3'])) + '.png'))
-            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item4'])) + '.png'))
-            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/10.13.1/img/item/' + str(int(line['item5'])) + '.png'))
+            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/' + latest + '/img/item/' + str(int(line['item0'])) + '.png'))
+            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/' + latest + '/img/item/' + str(int(line['item1'])) + '.png'))
+            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/' + latest + '/img/item/' + str(int(line['item2'])) + '.png'))
+            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/' + latest + '/img/item/' + str(int(line['item3'])) + '.png'))
+            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/' + latest + '/img/item/' + str(int(line['item4'])) + '.png'))
+            stats['images'].append(imaged(url='http://ddragon.leagueoflegends.com/cdn/' + latest + '/img/item/' + str(int(line['item5'])) + '.png'))
             if line['win'] == True:
                 if line['summonerName'] == summoner_clean:
                     wins += 1
