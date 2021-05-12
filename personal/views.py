@@ -405,8 +405,11 @@ def query_bias(query, dset_dict, discount=False, stop_after=10):
                 # print("no bias for:", result)
         rank += 1
     return 3 * ((plus + results_bias)/math.pi**2), 3 * results_bias / math.pi ** 2, 3 * (minus + results_bias) / math.pi ** 2
+
+
 dset_path = 'allsides.csv'
 dset_dict = dict_from_csv(dset_path, 25)
+
 
 def fair_top_k(query, k):
     rax = []
@@ -479,7 +482,7 @@ def test(request):
     query = str(request.GET.get('query'))
     response = HttpResponse()
     try:
-        response.content = json.dumps({'error': 'None', 'return': str(main([query])), 'fair_top_5': str(fair_top_k(query, 5))})
+        response.content = json.dumps({'query':query, 'return': str(main([query])), 'fair_top_5': str(fair_top_k(query, 5))})
     except Exception as e:
         response.content = json.dumps({'error': str(e), 'return': 'None'})
 
