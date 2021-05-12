@@ -481,9 +481,9 @@ def test(request):
     query = str(request.GET.get('query'))
     response = HttpResponse()
     try:
-        response.content = json.dumps({'error': 'None', 'return': str(main([query]))})
+        response.content = json.dumps({'error': 'None', 'return': str(main([query])), 'fair_top_5': str(fair_top_k(query, 5)[0])})
     except Exception as e:
-        response.content = json.dumps({'error': str(e), 'return': 'None', 'fair_top_5': str(fair_top_k(query, 5)[0])})
+        response.content = json.dumps({'error': str(e), 'return': 'None'})
 
     return response
 
