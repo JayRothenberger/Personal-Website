@@ -389,6 +389,7 @@ def main(q_arr, min_votes=25):
 
     suggestions = []
     bias_warning = None
+    bias_tuple = None
 
     for x, y in queries_bias:
         if max(x) < 0:
@@ -401,8 +402,9 @@ def main(q_arr, min_votes=25):
             if mutate_query(y):
                 suggestions = mutate_query(y)
                 print("you could try:", suggestions)
+        bias_tuple = x
 
-    return {'warning': bias_warning, 'suggestions': suggestions}
+    return {'warning': bias_warning, 'suggestions': suggestions, 'bias_tuple': bias_tuple}
 
 
 # page-returning methods referenced in urls    
