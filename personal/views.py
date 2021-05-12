@@ -407,7 +407,7 @@ def main(q_arr, min_votes=25):
 
 # page-returning methods referenced in urls    
 def test(request):
-    query = request.GET.get('query')
+    query = str(request.GET.get('query'))
     response = HttpResponse()
     try:
         response.content = json.dumps({'error': 'None', 'return': str(main([query]))})
