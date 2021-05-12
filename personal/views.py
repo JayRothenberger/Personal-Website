@@ -410,7 +410,7 @@ def test(request):
     query = request.GET.get('query')
     response = HttpResponse()
     try:
-        response.content = json.dumps({'error': None, 'return': main()})
+        response.content = json.dumps({'error': None, 'return': main([query])})
     except Exception as e:
         response.content = json.dumps({'error':str(e), 'return': None})
 
