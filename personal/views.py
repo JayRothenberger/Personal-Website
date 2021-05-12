@@ -414,7 +414,7 @@ def test(request):
     except Exception as e:
         response.content = json.dumps({'error':str(e), 'return': None})
 
-    return render(request, 'personal/test.html', {'query': query})
+    return response
 
 
 def index_view(request):
