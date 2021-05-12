@@ -412,7 +412,7 @@ def fair_top_k(query, k):
     score = 0
     rank = 1
     result_buffer = []
-    for result in search(query, tpe="nws", num=10, stop=25, pause=2):
+    for result in search(query, tpe="nws", num=10, stop=20, pause=2):
         if len(rax) >= k:
             return rax
 
@@ -437,7 +437,7 @@ def fair_top_k(query, k):
                     rax.append(result)
         else:
             continue
-    return rax[:k], (3 / (math.pi**2))*score
+    return rax[:k]
 
 
 dset_path = 'allsides.csv'
@@ -481,7 +481,7 @@ def test(request):
     query = str(request.GET.get('query'))
     response = HttpResponse()
     try:
-        response.content = json.dumps({'error': 'None', 'return': str(main([query])), 'fair_top_5': str(fair_top_k(query, 5)[0])})
+        response.content = json.dumps({'error': 'None', 'return': str(main([query])), 'fair_top_5': str(fair_top_k(query, 5))})
     except Exception as e:
         response.content = json.dumps({'error': str(e), 'return': 'None'})
 
