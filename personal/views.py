@@ -405,7 +405,8 @@ def query_bias(query, dset_dict, discount=False, stop_after=10):
                 # print("no bias for:", result)
         rank += 1
     return 3 * ((plus + results_bias)/math.pi**2), 3 * results_bias / math.pi ** 2, 3 * (minus + results_bias) / math.pi ** 2
-
+dset_path = 'allsides.csv'
+dset_dict = dict_from_csv(dset_path, 25)
 
 def fair_top_k(query, k):
     rax = []
@@ -440,11 +441,8 @@ def fair_top_k(query, k):
     return rax[:k]
 
 
-dset_path = 'allsides.csv'
-dset_dict = dict_from_csv(dset_path, 25)
-
-
 def main(q_arr, min_votes=25):
+
     queries_bias = []
 
     print(NaN_count)  # number of sources for which the bias is not determined
