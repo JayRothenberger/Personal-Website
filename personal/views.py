@@ -416,13 +416,14 @@ def fair_top_k(query, k):
     score = 0
     rank = 1
     result_buffer = []
-    for result in search(query, tpe="nws", num=10, stop=20, pause=2):
+    for result in search(query, tpe="nws", num=10, stop=25, pause=2):
         if len(rax) >= k:
             return rax
 
-        for prev in range(len(result_buffer)):
+        for prev in range(len(result_buffer)).__reversed__():
             new_score = score + (float(dset_dict[match_url(result_buffer[prev], dset_dict)[0]]['bias_val']) / (rank ** 2))
-            if abs(new_score) < (3 / (math.pi**2))*((.5*k) / rank) or score == new_score:
+
+            if abs(new_score) < (1 / (math.pi**2))*(k / rank) or score == new_score:
                 print(new_score)
                 score = new_score
                 rank += 1
@@ -432,7 +433,7 @@ def fair_top_k(query, k):
             res_bias = float(dset_dict[match_url(result, dset_dict)[0]]['bias_val'])
             if res_bias != 'nan':
                 new_score = score + (res_bias / (rank ** 2))
-                if abs(new_score) > (3 / (math.pi**2))*((.33*k) / rank):
+                if abs(new_score) > (1 / (math.pi**2))*(k / rank):
                     result_buffer.append(result)
                 else:
                     print(new_score)
@@ -482,7 +483,8 @@ def test(request):
     query = str(request.GET.get('query'))
     response = HttpResponse()
     try:
-        response.content = json.dumps({'query':query, 'return': str(main([query])), 'fair_top_5': str(fair_top_k(query, 5))})
+        response.content = json.dumps({'query':query, 'return': str(main([query])),
+                                       'fair_top_5': str(fair_top_k(query, 5))})
     except Exception as e:
         response.content = json.dumps({'error': str(e), 'return': 'None'})
 
