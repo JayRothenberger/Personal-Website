@@ -198,8 +198,11 @@ def getLocIds(zip='22903'):
 
 
 def updateProducts(loc_id_list=getLocIds()):
-    loc_id_list.pop(0)
-    loc_id_list.pop(0)
+    try:
+        loc_id_list.pop(0)
+        loc_id_list.pop(0)
+    except:
+        return
     print('updating products')
     load_data = json.loads(KrogerServiceData.objects.latest('time').data)
     brands = load_data['brands']
