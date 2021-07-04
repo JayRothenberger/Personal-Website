@@ -35,7 +35,7 @@ except:
 
 # non-page returning helper methods
 # api call manager so we don't exceed the call limit
-def APICall(call='matchlist_by_account', args={'summoner': 'SmallCrawler', 'region': 'na1'}):
+def APICall(call='matchlist_by_account', args={'summoner': 'MommyDommy', 'region': 'na1'}):
     try:
         history = APICallHistory.objects.filter(service__exact='Riot').order_by('-time')
         calls_ago_100 = history[99].time
@@ -67,7 +67,7 @@ def APICall(call='matchlist_by_account', args={'summoner': 'SmallCrawler', 'regi
             return {'matches': []}
 
 
-def updateMatchHistory(summoner='SmallCrawler', region='na1', return_latest=True, to_return=1):
+def updateMatchHistory(summoner='MommyDommy', region='na1', return_latest=True, to_return=1):
     # this is wrong, but won't be an issue unless there is more than one summoner in the db
     try:
         latest_detail = MatchHistory.objects.all().latest('time')
@@ -577,8 +577,8 @@ def riotDashboard(request):
 
     region = 'na1'
 
-    summoner = "SmallCrawler"
-    summoner_clean = "SmallCrawler"
+    summoner = "MommyDommy"
+    summoner_clean = "MommyDommy"
 
     match_details = updateMatchHistory(summoner=summoner, to_return=10)  # call to api request manager
     match_detail = match_details[0]
@@ -751,7 +751,6 @@ def riotDashboard(request):
             data['content'].append(stats)
 
         history.append(data)
-        print(data)
 
     return render(request, 'personal/dashboard.html', {'history': history, 'wl': {'wins': wins, 'losses': losses}})
 
