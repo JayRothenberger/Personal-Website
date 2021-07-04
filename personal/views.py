@@ -577,8 +577,8 @@ def riotDashboard(request):
 
     region = 'na1'
 
-    summoner = "MommyDommy"
-    summoner_clean = "MommyDommy"
+    summoner = "Small Crawler"
+    summoner_clean = "Small_Crawler"
 
     match_details = updateMatchHistory(summoner=summoner, to_return=10)  # call to api request manager
     match_detail = match_details[0]
