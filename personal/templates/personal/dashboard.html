@@ -29,7 +29,7 @@
     <div class="row">
         <p>History:</p>
     </div>
-    {% for entry in history|slice:'1:' %}
+    {% for entry in history %}
     <a href="#demo{{entry.entryId}}" data-toggle="collapse">
     <div class="row">
     {% for image in entry.header.images %}
