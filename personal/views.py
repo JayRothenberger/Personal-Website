@@ -35,7 +35,7 @@ except:
 
 # non-page returning helper methods
 # api call manager so we don't exceed the call limit
-def APICall(call='matchlist_by_account', args={'summoner': 'MommyDommy', 'region': 'na1'}):
+def APICall(call='matchlist_by_account', args={'summoner': 'Small_Crawler': 'na1'}):
     try:
         history = APICallHistory.objects.filter(service__exact='Riot').order_by('-time')
         calls_ago_100 = history[99].time
@@ -67,7 +67,7 @@ def APICall(call='matchlist_by_account', args={'summoner': 'MommyDommy', 'region
             return {'matches': []}
 
 
-def updateMatchHistory(summoner='MommyDommy', region='na1', return_latest=True, to_return=1):
+def updateMatchHistory(summoner='Small_Crawler', region='na1', return_latest=True, to_return=1):
     # this is wrong, but won't be an issue unless there is more than one summoner in the db
     try:
         latest_detail = MatchHistory.objects.all().latest('time')
