@@ -751,6 +751,7 @@ def riotDashboard(request):
             data['content'].append(stats)
 
         history.append(data)
+        print(data)
 
     return render(request, 'personal/dashboard.html', {'history': history, 'wl': {'wins': wins, 'losses': losses}})
 
