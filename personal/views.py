@@ -67,7 +67,7 @@ def APICall(call='matchlist_by_account', args={'summoner': 'MomDom', 'region': '
             return {'matches': []}
 
 
-def updateMatchHistory(summoner='MomDom', region='na1', return_latest=True, to_return=1):
+def updateMatchHistory(summoner='Mom Dom', region='na1', return_latest=True, to_return=1):
     # this is wrong, but won't be an issue unless there is more than one summoner in the db
     try:
         latest_detail = MatchHistory.objects.all().latest('time')
@@ -577,7 +577,7 @@ def riotDashboard(request):
 
     region = 'na1'
 
-    summoner = "Mom Dom"
+    summoner = "Mom_Dom"
     summoner_clean = "MomDom"
 
     match_details = updateMatchHistory(summoner=summoner, to_return=10)  # call to api request manager
