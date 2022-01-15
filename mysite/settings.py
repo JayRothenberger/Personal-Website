@@ -33,14 +33,12 @@ ALLOWED_HOSTS = ['192.168.1.136']
 # Application definition
 
 INSTALLED_APPS = [
-    'personal.apps.personalConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.postgres',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +56,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'personal/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
