@@ -1,12 +1,6 @@
 Django
 gunicorn
 django-heroku
-riotwatcher
 pandas
 asteval
 requests
-apscheduler
-beautifulsoup4==4.9.3
-certifi==2020.12.5
-google==2.0.3
-soupsieve==2.2.1
