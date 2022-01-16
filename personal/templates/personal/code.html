@@ -58,17 +58,26 @@
 
     }
 
-    function power3(){
+    function div3(){
 
-        in1 = document.getElementById("power3In1").value
+        in1 = document.getElementById("div3In1").value
         
-        code = document.getElementById("power3Code").innerText.replace(RegExp(/\$in1/, "g"), in1)
-        runPy(code, "power3Return")
+        code = document.getElementById("div3Code").innerText.replace(RegExp(/\$in1/, "g"), in1)
+        runPy(code, "div3Return")
 
+    }
+
+    function EGZ(){
+        code = document.getElementById("EGZCode").innerText
+        runPy(code, "EGZReturn")
     }
 
 </script>
 <style>
+    textarea {
+        background-color: black !important;
+    }
+
     .card{
 
         margin-bottom: 10 !important;
@@ -84,6 +93,9 @@
         overflow: "scroll" !important;
 
     }
+    .btn{
+        margin: 5px;
+    }
 
 </style>
 <div class="card">
@@ -97,23 +109,23 @@
             </div>
         </div>
         <div class="row">
-                <div class="col">
-                    <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">in1</span>
-                            </div>
-                            <input id="binAddIn1" type="text" class="form-control" placeholder="10110" aria-label="in1" aria-describedby="basic-addon1">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">in1</span>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">in2</span>
-                            </div>
-                            <input id="binAddIn2" type="text" class="form-control" placeholder="11" aria-label="in2" aria-describedby="basic-addon1">
-                    </div>
+                    <input id="binAddIn1" type="text" class="form-control" placeholder="10110" aria-label="in1" aria-describedby="basic-addon1">
                 </div>
             </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">in2</span>
+                    </div>
+                    <input id="binAddIn2" type="text" class="form-control" placeholder="11" aria-label="in2" aria-describedby="basic-addon1">
+                </div>
+            </div>
+        </div>
     </div>
     <div class="card-body">
         <pre><code id="binAddCode" class="python" style="background-color: white">
@@ -181,7 +193,7 @@ print(str(bin(int(nums[0], base=2) + int(nums[1], base=2))).replace('0b', ''))
     </div>
     <div class="card-body" style="color:black">
         <h5 class="card-title">Output:</h5>
-        <textarea id="binAddReturn" class="form-control" readonly></textarea>
+        <textarea id="binAddReturn" class="form-control" readonly ></textarea>
     </div>
 </div>
 <div class="card">
@@ -195,17 +207,17 @@ print(str(bin(int(nums[0], base=2) + int(nums[1], base=2))).replace('0b', ''))
             </div>
         </div>
         <div class="row">
-                <div class="col">
-                    <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">in1</span>
-                            </div>
-                            <input id="primeVerifyIn1" type="text" class="form-control" placeholder="10" aria-label="in1" aria-describedby="basic-addon1">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">in1</span>
                     </div>
-                </div>
-                <div class="col">
+                    <input id="primeVerifyIn1" type="text" class="form-control" placeholder="10" aria-label="in1" aria-describedby="basic-addon1">
                 </div>
             </div>
+            <div class="col">
+            </div>
+        </div>
     </div>
     <div class="card-body">
         <pre><code id="primeVerifyCode" class="python" style="background-color: white">
@@ -253,35 +265,35 @@ print(arr)
     </div>
 </div>
 <div class="card">
-        <div class="card-header" style="color:black">
-            <div class="row">
-                <div class="col align-self-center">
-                    Recursive Power of 3 Verifier
-                </div>
-                <div class="col align-self-center" style="text-align: right;">
-                    <button type="button" class="btn btn-success" onclick="power3()">Run</button>
-                </div>
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-center">
+                Recursive Multiple of 3 Verifier
             </div>
-            <div class="row">
-                    <div class="col">
-                        <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">in1</span>
-                                </div>
-                                <input id="power3In1" type="text" class="form-control" placeholder="10" aria-label="in1" aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                    <div class="col">
-                </div>
+            <div class="col align-self-center" style="text-align: right;">
+                <button type="button" class="btn btn-success" onclick="div3()">Run</button>
             </div>
         </div>
-        <div class="card-body">
-            <pre><code id="power3Code" class="python" style="background-color: white">
+        <div class="row">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">in1</span>
+                    </div>
+                    <input id="div3In1" type="text" class="form-control" placeholder="10" aria-label="in1" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+            <pre><code id="div3Code" class="python" style="background-color: white">
 # code that verifies whether a number is divisible by 3
 # this solution is dynamic, which means it is both more interesting and less functional than an iterative solution
 # in1: number to verify (int)
 
-def power3(n):
+def div3(n):
     if n == 3 or n == 6 or n == 9:
         return True
     if n < 10:
@@ -290,46 +302,46 @@ def power3(n):
     sumDigits = 0
     for i in digits:
         sumDigits += int(i)
-    return power3(sumDigits)
+    return div3(sumDigits)
 
-print($in1, power3($in1))
+print($in1, div3($in1))
             </code></pre>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">Output:</h5>
+        <textarea id="div3Return" class="form-control" readonly></textarea>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-center">
+                Minimum Swaps to Sorted Array Calculator
+            </div>
+            <div class="col align-self-center" style="text-align: right;">
+                <button type="button" class="btn btn-success" onclick="minSwaps()">Run</button>
+            </div>
         </div>
-        <div class="card-body" style="color:black">
-            <h5 class="card-title">Output:</h5>
-            <textarea id="power3Return" class="form-control" readonly></textarea>
+        <div class="row">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">in1</span>
+                    </div>
+                    <input id="minSwapsIn1" type="text" class="form-control" placeholder="list(range(len(a)))" aria-label="in1" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">in2</span>
+                    </div>
+                    <input id="minSwapsIn2" type="text" class="form-control" placeholder="[]" aria-label="in2" aria-describedby="basic-addon1">
+                </div>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header" style="color:black">
-            <div class="row">
-                <div class="col align-self-center">
-                    Minimum Swaps to Sorted Array Calculator
-                </div>
-                <div class="col align-self-center" style="text-align: right;">
-                    <button type="button" class="btn btn-success" onclick="minSwaps()">Run</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">in1</span>
-                            </div>
-                            <input id="minSwapsIn1" type="text" class="form-control" placeholder="list(range(len(a)))" aria-label="in1" aria-describedby="basic-addon1">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">in2</span>
-                            </div>
-                            <input id="minSwapsIn2" type="text" class="form-control" placeholder="[]" aria-label="in2" aria-describedby="basic-addon1">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
+    <div class="card-body">
             <pre><code id="minSwapsCode" class="python" style="background-color: white">
 # code to calculate the minimum number of element swaps to order a list
 # in2: elements to sort
@@ -367,27 +379,25 @@ for i in range(len(a)):
 
 print(minSwaps(a, b, sorted))
             </code></pre>
-        </div>
-        <div class="card-body" style="color:black">
-            <h5 class="card-title">Output:</h5>
-            <textarea id="EGZReturn" class="form-control" readonly></textarea>
-        </div>
     </div>
-    <div class="card">
-        <div class="card-header" style="color:black">
-            <div class="row">
-                <div class="col align-self-center">
-                    EGZ-subset finder
-                </div>
-                <div class="col align-self-center" style="text-align: right;">
-                    <button type="button" class="btn btn-success" onclick="EGZ()">Run</button>
-                </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">Output:</h5>
+        <textarea id="minSwapsReturn" class="form-control" readonly></textarea>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-center">
+                EGZ-subset finder
+            </div>
+            <div class="col align-self-center" style="text-align: right;">
+                <button type="button" class="btn btn-success" onclick="EGZ()">Run</button>
             </div>
         </div>
-        <div class="card-body">
-            <pre><code id="EGZcode" class="python" style="background-color: white">
-import numpy as np
-
+    </div>
+    <div class="card-body">
+            <pre><code id="EGZCode" class="python" style="background-color: white">
 def egz_dp(T):
     n  = (len(T) + 1)//2
     # generate a 3d dp table of lists:
@@ -416,16 +426,15 @@ def egz_dp(T):
         if len(dp_table[i][0][n]) == n:
             return dp_table[i][0][n]
 
-
-for i in range(10):
-    n = 20
-    T = list(np.random.randint(0, n, 2 * n - 1))
-    print(egz_dp(T), sum(egz_dp(T))/n)
+T = [-1, 1, 2, 3, 5, 7, 11, 13, 17, 23, 29]
+n = (len(T) + 1) / 2
+res = egz_dp(T)
+print(res, sum(res)/n)
             </code></pre>
-        </div>
-        <div class="card-body" style="color:black">
-            <h5 class="card-title">Output:</h5>
-            <textarea id="EGZReturn" class="form-control" readonly></textarea>
-        </div>
     </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">Output:</h5>
+        <textarea id="EGZReturn" class="form-control" readonly></textarea>
+    </div>
+</div>
 {% endblock %}
