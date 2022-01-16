@@ -23,7 +23,7 @@
         {
         document.getElementById(id).innerHTML = "running..."
         document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: red;background:white;"
-        $.get("http://www.jayrothenberger.com/run/", {'torun': code}, function(data, status){
+        $.get("/run/", {'torun': code}, function(data, status){
             data = JSON.parse(data)
             document.getElementById(id).style = "width:100%;font-family: 'Courier New';color: green;overflow-y: scroll; padding-left: 30px !important; background:white;"
             document.getElementById(id).innerHTML = data['return']
