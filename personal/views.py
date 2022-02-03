@@ -142,18 +142,15 @@ def rendezvous(request):
             sock.bind((UDP_IP, UDP_PORT))
             logger.info(f'listening on port: {UDP_PORT}')
 
-            while True:
-                logger.info(f'{ptime() - start}')
-                if ptime() - start > 10:
-                    logger.info(f'time elapsed: {ptime() - start}, shutting down process')
-                    return
-                data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
-                logger.info(f"received message: {data}, {ip}:{port}")
+            time.sleep(5)
 
-                sock2 = socket.socket(socket.AF_INET,  # Internet
-                                      socket.SOCK_DGRAM)  # UDP
+            data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
+            logger.info(f"received message: {data}, {ip}:{port}")
 
-                sock2.sendto(b"fuck you :)", (ip, port))
+            sock2 = socket.socket(socket.AF_INET,  # Internet
+                                  socket.SOCK_DGRAM)  # UDP
+
+            sock2.sendto(b"fuck you :)", (ip, port))
 
         except Exception as e:
             logger.info(str(e))
