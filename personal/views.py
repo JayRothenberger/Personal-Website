@@ -23,6 +23,7 @@ LISTENING = False
 
 logger = logging.getLogger('testlogger')
 
+
 # I'm using these functions to standardize the objects I send to the template and to populate default values.
 def textd(value='', style=''):  # for generating text JSON objects for the template
     return {'value': str(value), 'style': style}
@@ -125,7 +126,6 @@ def run(request):
 
 
 def rendezvous(request):
-
     logger.info('starting the rendezvous page')
 
     def listen():
@@ -139,23 +139,22 @@ def rendezvous(request):
 
             sock.bind((UDP_IP, UDP_PORT))
             logger.info(f'listening on port: {UDP_PORT}')
-        except Exception as e:
-            logger.info(str(e))
 
-        while True:
-            data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
-            print(f"received message: {data}, {ip}:{port}")
-            try:
+            while True:
+                data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
+                logger.info(f"received message: {data}, {ip}:{port}")
+
                 sock2 = socket.socket(socket.AF_INET,  # Internet
                                       socket.SOCK_DGRAM)  # UDP
 
                 sock2.sendto(b"fuck you :)", (ip, port))
 
-            except Exception as e:
-                pass
+        except Exception as e:
+            logger.info(str(e))
 
     if not LISTENING:
         P = Process(target=listen())
         P.start()
+        P.join()
 
     return render(request, 'personal/test.html')
