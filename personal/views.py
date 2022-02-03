@@ -20,7 +20,8 @@ from asteval import Interpreter
 import requests
 
 LISTENING = False
-logger = logging.getLogger()
+
+logger = logging.getLogger('testlogger')
 
 # I'm using these functions to standardize the objects I send to the template and to populate default values.
 def textd(value='', style=''):  # for generating text JSON objects for the template
@@ -132,11 +133,15 @@ def rendezvous(request):
         UDP_IP = ''
         UDP_PORT = 5555
 
-        sock = socket.socket(socket.AF_INET,  # Internet
-                             socket.SOCK_DGRAM)  # UDP
+        try:
+            sock = socket.socket(socket.AF_INET,  # Internet
+                                 socket.SOCK_DGRAM)  # UDP
 
-        sock.bind((UDP_IP, UDP_PORT))
-        logger.info(f'listening on port: {UDP_PORT}')
+            sock.bind((UDP_IP, UDP_PORT))
+            logger.info(f'listening on port: {UDP_PORT}')
+        except Exception as e:
+            print(e)
+
         while True:
             data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
             print(f"received message: {data}, {ip}:{port}")
