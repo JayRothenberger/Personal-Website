@@ -3,6 +3,9 @@ import time
 import json
 import os
 from copy import deepcopy as copy
+import logging
+import socket
+from multiprocessing import Process
 
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
@@ -17,7 +20,7 @@ from asteval import Interpreter
 import requests
 
 LISTENING = False
-
+logger = logging.getLogger()
 
 # I'm using these functions to standardize the objects I send to the template and to populate default values.
 def textd(value='', style=''):  # for generating text JSON objects for the template
@@ -121,10 +124,11 @@ def run(request):
 
 
 def rendezvous(request):
-    import socket
-    from multiprocessing import Process
+
+    logger.info('starting the rendezvous page')
 
     def listen():
+
         UDP_IP = ''
         UDP_PORT = 5555
 
@@ -132,7 +136,7 @@ def rendezvous(request):
                              socket.SOCK_DGRAM)  # UDP
 
         sock.bind((UDP_IP, UDP_PORT))
-
+        logger.info(f'listening on port: {UDP_PORT}')
         while True:
             data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
             print(f"received message: {data}, {ip}:{port}")
