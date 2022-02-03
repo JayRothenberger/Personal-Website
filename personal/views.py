@@ -140,7 +140,7 @@ def rendezvous(request):
             sock.bind((UDP_IP, UDP_PORT))
             logger.info(f'listening on port: {UDP_PORT}')
         except Exception as e:
-            print(e)
+            logger.info(str(e))
 
         while True:
             data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
