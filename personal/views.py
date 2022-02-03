@@ -1,5 +1,6 @@
 import math
 import time
+from time import perf_counter as ptime
 import json
 import os
 from copy import deepcopy as copy
@@ -124,12 +125,12 @@ def run(request):
         print(response.content)
         return response
 
-
+# function to open a ren
 def rendezvous(request):
     logger.info('starting the rendezvous page')
 
     def listen():
-
+        start = ptime()
         UDP_IP = ''
         UDP_PORT = 5555
 
@@ -141,6 +142,9 @@ def rendezvous(request):
             logger.info(f'listening on port: {UDP_PORT}')
 
             while True:
+                if ptime() - start > 25:
+                    logger.info(f'time elapsed: {ptime() - start}, shutting down process')
+                    return
                 data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
                 logger.info(f"received message: {data}, {ip}:{port}")
 
@@ -151,6 +155,7 @@ def rendezvous(request):
 
         except Exception as e:
             logger.info(str(e))
+            return
 
     if not LISTENING:
         P = Process(target=listen())
