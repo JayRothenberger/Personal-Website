@@ -53,17 +53,14 @@ def index_view(request):
             c = open("c.txt", "r")
             rax = '\n'
             rax = rax.join(c.readlines())
-            return render(request, 'personal/index.html', {'error': '', 'return': str(rax)})
             c.close()
+            return render(request, 'personal/index.html', {'error': '', 'return': str(rax)})
+
         except Exception as e:
             c.close()
             error = e
+            logging.info(str(e))
             return render(request, 'personal/index.html', {'error': str(e), 'return': ''})
-
-        return render(request, 'personal/index.html', {'error': str(e), 'return': str(rax)})
-
-        dest = request.POST['dest']
-        return HttpResponseRedirect('/user/' + dest)
 
     return render(request, 'personal/index.html')
 
@@ -116,7 +113,7 @@ def run(request):
         response.content = json.dumps({'error': er, 'return': str(rax)})
         print(response.content)
         return response
-        f.close()
+
     except Exception as e:
         f.close()
         error = e
@@ -141,8 +138,8 @@ def rendezvous(request):
 
             sock.bind((UDP_IP, UDP_PORT))
             logger.info(f'listening on port: {UDP_PORT}')
-            sock.settimeout(5)
-            data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
+            sock.settimeout(15)
+            data, (ip, port) = sock.recvfrom(1500)  # buffer size is 1024 bytes
             logger.info(f"received message: {data}, {ip}:{port}")
 
             sock2 = socket.socket(socket.AF_INET,  # Internet
@@ -155,8 +152,9 @@ def rendezvous(request):
             return
 
     if not LISTENING:
-        P = Process(target=listen())
-        P.start()
-        P.join()
+        pass
+        #P = Process(target=listen())
+        #P.start()
+        #P.join()
 
     return render(request, 'personal/test.html')
