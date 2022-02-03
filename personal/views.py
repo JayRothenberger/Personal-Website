@@ -141,9 +141,7 @@ def rendezvous(request):
 
             sock.bind((UDP_IP, UDP_PORT))
             logger.info(f'listening on port: {UDP_PORT}')
-
-            time.sleep(5)
-
+            sock.settimeout(5)
             data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
             logger.info(f"received message: {data}, {ip}:{port}")
 
