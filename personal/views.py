@@ -125,6 +125,7 @@ def run(request):
         print(response.content)
         return response
 
+
 # function to open a ren
 def rendezvous(request):
     logger.info('starting the rendezvous page')
@@ -142,7 +143,8 @@ def rendezvous(request):
             logger.info(f'listening on port: {UDP_PORT}')
 
             while True:
-                if ptime() - start > 25:
+                logger.info(f'{ptime() - start}')
+                if ptime() - start > 10:
                     logger.info(f'time elapsed: {ptime() - start}, shutting down process')
                     return
                 data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
