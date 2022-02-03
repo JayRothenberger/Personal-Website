@@ -16,6 +16,8 @@ import pandas as pd
 from asteval import Interpreter
 import requests
 
+LISTENING = False
+
 
 # I'm using these functions to standardize the objects I send to the template and to populate default values.
 def textd(value='', style=''):  # for generating text JSON objects for the template
@@ -116,3 +118,35 @@ def run(request):
         response.content = json.dumps({'error': str(e), 'return': ''})
         print(response.content)
         return response
+
+
+def rendezvous(request):
+    import socket
+    from multiprocessing import Process
+
+    def listen():
+        UDP_IP = ''
+        UDP_PORT = 5555
+
+        sock = socket.socket(socket.AF_INET,  # Internet
+                             socket.SOCK_DGRAM)  # UDP
+
+        sock.bind((UDP_IP, UDP_PORT))
+
+        while True:
+            data, (ip, port) = sock.recvfrom(1024)  # buffer size is 1024 bytes
+            print(f"received message: {data}, {ip}:{port}")
+            try:
+                sock2 = socket.socket(socket.AF_INET,  # Internet
+                                      socket.SOCK_DGRAM)  # UDP
+
+                sock2.sendto(b"fuck you :)", (ip, port))
+
+            except Exception as e:
+                pass
+
+    if not LISTENING:
+        P = Process(target=listen())
+        P.start()
+
+    return render(request, 'personal/test.html')

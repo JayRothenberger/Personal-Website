@@ -10,4 +10,5 @@ urlpatterns = [
     path('blog/', views.test, name='blog'),
     path('ide/', views.ide, name='ide'),
     path('run/', views.run, name='run'),
+    path('rendezvous/', views.rendezvous, name='rendezvous'),
 ]
