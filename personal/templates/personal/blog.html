@@ -31,7 +31,680 @@
     <div class="card-header" style="color:black">
         <div class="row">
             <div class="col align-self-left">
-                Blog Post Test
+                Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions and a Patchify Layer
+            </div>
+            <div class="col align-self-center">
+                <p>
+                    Below I have included the code for my fourth attempt at constructing an autoencoder capable of reconstructing
+                    pokemon from a learned latent space.  In this iteration in the spirit of the newly released ConvNext architecture
+                    I make use of a patchify layer on the input.  Effectively this separates the input image into patches instead of
+                    the traditional maxpooling downsampling approach.  I am not confident I have implemented this in any useful way,
+                    and as of posting this the architechture below has not proven suitable for this task.  I still make use of the
+                    familiar skip connections and depthwise separable convolutions, but this model is much smaller.  I had hoped that
+                    the previous approaches simply were too complicated or deep, and that the blurryness that is evident in the earlier
+                    outputs was a result of the typical loss of definition that comes with depth in CNNs, however it appears that was not
+                    so.  Loss on this model has not been encouraging on preliminary tests, and I believe I may have to resign myself
+                    to the fact that 1400 images simply is not enough to learn this task.  This may be my last attempt at an architecture
+                    for this task, as I think it would be more gratifying to practice these techniques on an easier task such as classification.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <pre><code id="bp4" class="python" style="background-color: white">
+import os
+
+import tensorflow as tf
+from tensorflow import keras
+#import tensorflow_addons as tfa
+from tensorflow.keras import layers
+from time import time
+
+from tensorflow.keras.preprocessing.image import load_img
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.preprocessing.image import array_to_img
+
+from os import listdir
+from os.path import isfile, join
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from math import log2 as log
+
+# os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
+
+mypath = './pokemon_img_jpg/'
+"""
+df = []
+for f in listdir(mypath):
+  if '-' not in f:
+    if isfile(join(mypath, f)):
+      try:
+        arr_img = img_to_array(load_img(join(mypath, f)))
+        df += [arr_img, np.flipud(arr_img)]
+        #df += [arr_img, np.flipud(arr_img), np.fliplr(arr_img), np.fliplr(np.flipud(arr_img)), np.rot90(arr_img), np.rot90(arr_img, k=3)]
+        #ones = np.ones_like(arr_img)
+        #zeroes = np.zeros_like(arr_img)
+        #twofiftyfives = ones*255
+        #df += [np.minimum(twofiftyfives, arr_img + i*ones) for i in range(4, 9, 4)]
+        #df += [np.maximum(zeroes, arr_img - i*ones) for i in range(4, 9, 4)]
+
+      except FileNotFoundError as e:
+        print(e)
+print(len(df))
+df = np.asarray(df)
+np.random.shuffle(df)
+
+df = df.astype(np.uint8)
+
+df = tf.data.Dataset.from_tensor_slices((df, df))
+tf.data.experimental.save(df, 'pkmn_dset_tf_uint8')
+"""
+batch_size = 4
+
+df = np.load('pkmn_dset_numpy.npy')
+
+input_shape = (256, 256, 3)
+
+
+def build_separable_conv_model(input_shape, patch_blocks=1, flat_blocks=1,
+                               AE=False,
+                               activation='relu',
+                               learning_rate=0.001,
+                               flat_filters=256,
+                               scaling_filters=32,
+                               patch_size=(4, 4),
+                               decoder_filter_size=(3, 3),
+                               encoder_filter_size=(4, 4)):
+    init = tf.keras.initializers.LecunNormal()
+
+    enc_inputs = layers.Input(input_shape, name='inputs')  # does not include batch size
+    skip = enc_inputs
+
+    x = skip
+    for block in range(patch_blocks):  # each downscales by 4
+        x = layers.Conv2D(scaling_filters, (4, 4), (4, 4), padding='same')(x)  # patchify convolution
+        x = layers.SeparableConv2D(scaling_filters, encoder_filter_size, padding='same', kernel_initializer=init)(x)  # patches should interact
+        x = layers.Activation(activation)(x)  # activate
+        skip = layers.Conv2D(scaling_filters, (4, 4), (4, 4), padding='same')(skip)
+        x = layers.Add()([x, skip])
+
+    for block in range(flat_blocks):
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(flat_filters, encoder_filter_size, padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(flat_filters, encoder_filter_size, padding='same', kernel_initializer=init)(x)
+        x = layers.Conv2D(flat_filters, (1, 1),  kernel_initializer=init)(x)  # bottleneck
+        skip = layers.Conv2D(flat_filters, (1, 1), padding='same')(skip)
+        x = layers.Add()([x, skip])
+
+    enc_outputs = layers.GlobalAveragePooling2D()(x)
+
+    if AE:
+        encoder = tf.keras.Model(inputs=[enc_inputs], outputs=[enc_outputs],
+                              name='xceptional_smaller_encoder')
+
+        input_shape_dec = (flat_filters,)
+        output_shape_dec = input_shape
+
+        dec_inputs = layers.Input(input_shape_dec, name='dec_inputs')
+        dim = int(input_shape_dec[0] ** (1 / 2))
+        x = layers.Reshape((dim, dim, 1))(dec_inputs)
+
+        scaling_blocks_dec = int(log(output_shape_dec[0]) - log(input_shape_dec[0] ** (1 / 2)))
+
+        skip = x
+
+        for block in range(scaling_blocks_dec):
+            x = layers.UpSampling2D(2)(x)
+            # 2**(block + 4) = [16, 32, 64, 128]
+            x = layers.SeparableConv2D(128, decoder_filter_size, strides=(1, 1), padding='same',
+                                       kernel_initializer=init)(x)
+            x = layers.Activation(activation)(x)
+            x = layers.SeparableConv2D(128, decoder_filter_size, strides=(1, 1), padding='same',
+                                       kernel_initializer=init)(x)
+            x = layers.Activation(activation)(x)
+            x = layers.SeparableConv2D(128, decoder_filter_size, strides=(1, 1), padding='same',
+                                       kernel_initializer=init)(x)
+            x = layers.Conv2D(128, (1, 1), kernel_initializer=init)(x)  # bottleneck
+            skip = layers.Conv2D(128, (1, 1), padding='same')(
+                layers.UpSampling2D(2)(skip))
+            x = layers.Add()([x, skip])
+
+        x = layers.Conv2D(3, (3, 3), padding='same', activation=activation)(x)
+        dec_outputs = layers.Conv2D(3, (1, 1))(x)
+
+        decoder = tf.keras.Model(inputs=dec_inputs, outputs=dec_outputs, name='xceptional_smaller_decoder')
+
+        model = tf.keras.Model(inputs=[enc_inputs], outputs=decoder(encoder(enc_inputs)),
+                            name=f'xceptional_smaller_{patch_blocks}_AE_{AE}')
+
+        opt = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+
+        model.compile(loss='mse', optimizer=opt)
+
+        print(model.summary())
+
+        return model, encoder, decoder
+
+    opt = tf.keras.optimizers.Nadam(learning_rate=learning_rate, beta_1=0.9,
+                                    beta_2=0.999, epsilon=None, decay=0.0)
+
+    model = tf.keras.Model(inputs=enc_inputs, outputs=enc_outputs,
+                        name=f'xceptional_smaller_{patch_blocks}_AE_{AE}')
+
+    model.compile(loss='mse', optimizer=opt)
+
+    print(model.summary())
+
+    return model
+
+
+model, encoder, decoder = build_separable_conv_model(input_shape, patch_blocks=2, flat_blocks=3, AE=True)
+
+cont = input('proceed with experiment?')
+
+if cont == 'stop':
+    raise ValueError()
+
+model.fit(df, df, batch_size=batch_size, epochs=50)
+
+tf.keras.models.save_model(model, f'autoenc_{time()}')
+tf.keras.models.save_model(encoder, f'enc_{time()}')
+tf.keras.models.save_model(decoder, f'dec_{time()}')
+
+inds = [0, 1, 2, 3, 4, 5, 6]
+ncols = len(inds)
+nrows = 2
+
+fig = plt.figure(figsize=(ncols, nrows), dpi=300)
+
+for i in inds:
+    ax = fig.add_subplot(nrows, ncols, i + 1)
+    ax.axes.xaxis.set_ticks([])
+    ax.axes.yaxis.set_ticks([])
+    prediction = model.predict(np.array([df[inds[i]], ]))
+    plt.imshow(array_to_img(prediction[0]))
+    ax = fig.add_subplot(nrows, ncols, i + 1 + ncols)
+    ax.axes.xaxis.set_ticks([])
+    ax.axes.yaxis.set_ticks([])
+    plt.imshow(array_to_img(df[inds[i]]))
+
+plt.show()
+
+        </code></pre>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">No Output For This Model</h5>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                Variational Fully Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions
+            </div>
+            <div class="col align-self-center">
+                <p>
+                    Below I have included the code for my third attempt at a convolutional autoencoder for learning a representation of
+                    images of pokemon.  The model below never achieved good enough performance for me to get an output that looks even as
+                    visually recognizable as the previous two, which is really a shame because I used some pretty slick techniques to construct
+                    it.  I have included a basic sampling layer (this is the code suggested by keras or Aurelien Geron) to make this a
+                    variational autoencoder, as well as some updates to the functions I use to construct my encoder and decoder.  This
+                    code makes changing hyperparameters a more sensible task.  My inputs to the variational layer are also in the style
+                    of Fully Convolutional Neural Networks making use of Global Average Pooling layers.  I continue to use the residual
+                    connections present in the previous models.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <pre><code id="bp3" class="python" style="background-color: white">
+import os
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from time import time
+
+from tensorflow.keras.preprocessing.image import load_img
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.preprocessing.image import array_to_img
+
+from os import listdir
+from os.path import isfile, join
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from math import log2 as log
+
+# os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
+
+mypath = './pokemon_img_jpg/'
+"""
+df = []
+for f in listdir(mypath):
+  if '-' not in f:
+    if isfile(join(mypath, f)):
+      try:
+        arr_img = img_to_array(load_img(join(mypath, f)))
+        df += [arr_img, np.flipud(arr_img)]
+        #df += [arr_img, np.flipud(arr_img), np.fliplr(arr_img), np.fliplr(np.flipud(arr_img)), np.rot90(arr_img), np.rot90(arr_img, k=3)]
+        #ones = np.ones_like(arr_img)
+        #zeroes = np.zeros_like(arr_img)
+        #twofiftyfives = ones*255
+        #df += [np.minimum(twofiftyfives, arr_img + i*ones) for i in range(4, 9, 4)]
+        #df += [np.maximum(zeroes, arr_img - i*ones) for i in range(4, 9, 4)]
+
+      except FileNotFoundError as e:
+        print(e)
+print(len(df))
+df = np.asarray(df)
+np.random.shuffle(df)
+
+df = df.astype(np.uint8)
+
+df = tf.data.Dataset.from_tensor_slices((df, df))
+tf.data.experimental.save(df, 'pkmn_dset_tf_uint8')
+"""
+batch_size = 4
+
+df = np.load('pkmn_dset_numpy.npy')
+
+input_shape = (256, 256, 3)
+
+
+class Sampling(layers.Layer):
+    def call(self, inputs):
+        mean, log_var = inputs
+        return tf.keras.backend.random_normal(tf.shape(log_var)) * tf.keras.backend.exp(log_var / 2) * mean
+
+
+def build_separable_conv_model(input_shape, scaling_blocks=1, flat_blocks=1,
+                               AE=False,
+                               activation='selu',
+                               learning_rate=0.001,
+                               flat_filters=256,
+                               scaling_filters=128,
+                               decoder_filter_size=(3, 3),
+                               encoder_filter_size=(3, 3)):
+    init = tf.keras.initializers.LecunNormal()
+
+    enc_inputs = layers.Input(input_shape, name='inputs')  # does not include batch size
+    x = layers.Conv2D(32, (3, 3), (2, 2), 'same', activation=activation, kernel_initializer=init)(enc_inputs)
+    skip = layers.Conv2D(68, (3, 3), (1, 1), 'same', activation=activation, kernel_initializer=init)(x)
+
+    x = skip
+    for block in range(scaling_blocks):
+        x = layers.SeparableConv2D(scaling_filters, encoder_filter_size, strides=(1, 1), padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(scaling_filters, encoder_filter_size, strides=(1, 1), padding='same', kernel_initializer=init)(x)
+        x = layers.MaxPooling2D(encoder_filter_size, (2, 2), padding='same')(x)
+        skip = layers.Conv2D(scaling_filters, (1, 1), (2, 2), padding='same')(skip)
+        x = layers.Add()([x, skip])
+
+    for block in range(flat_blocks):
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(flat_filters, encoder_filter_size, padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(flat_filters, encoder_filter_size, padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(flat_filters, encoder_filter_size, padding='same', kernel_initializer=init)(x)
+        x = layers.Conv2D(flat_filters, (1, 1),  kernel_initializer=init)(x)  # bottleneck
+        skip = layers.Conv2D(flat_filters, (1, 1), padding='same')(skip)
+        x = layers.Add()([x, skip])
+
+    mu = layers.SeparableConv2D(flat_filters, (3, 3), padding='same', kernel_initializer=init)(x)
+    gamma = layers.SeparableConv2D(flat_filters, (3, 3), padding='same', kernel_initializer=init)(x)
+
+    mu = layers.GlobalAveragePooling2D()(mu)
+    gamma = layers.GlobalAveragePooling2D()(gamma)
+
+    enc_outputs = Sampling()([mu, gamma])
+
+    if AE:
+        encoder = tf.keras.Model(inputs=[enc_inputs], outputs=[enc_outputs],
+                              name='xceptional_encoder')
+
+        input_shape_dec = (flat_filters,)
+        output_shape_dec = input_shape
+
+        dec_inputs = layers.Input(input_shape_dec, name='dec_inputs')
+        dim = int(input_shape_dec[0] ** (1/2))
+        x = layers.Reshape((dim, dim, 1))(dec_inputs)
+
+        scaling_blocks_dec = int(log(output_shape_dec[0]) - log(input_shape_dec[0] ** (1 / 2)))
+
+        skip = x
+
+        for block in range(scaling_blocks_dec):
+            x = layers.UpSampling2D(2)(x)
+            # 2**(block + 4) = [16, 32, 64, 128]
+            x = layers.SeparableConv2D(128, decoder_filter_size, strides=(1, 1), padding='same',
+                                       kernel_initializer=init)(x)
+            x = layers.Activation(activation)(x)
+            x = layers.SeparableConv2D(128, decoder_filter_size, strides=(1, 1), padding='same',
+                                       kernel_initializer=init)(x)
+            x = layers.Activation(activation)(x)
+            x = layers.SeparableConv2D(128, decoder_filter_size, strides=(1, 1), padding='same',
+                                       kernel_initializer=init)(x)
+            x = layers.Conv2D(128, (1, 1), kernel_initializer=init)(x)  # bottleneck
+            skip = layers.Conv2D(128, (1, 1), padding='same')(
+                layers.UpSampling2D(2)(skip))
+            x = layers.Add()([x, skip])
+
+        x = layers.Conv2D(3, (3, 3), padding='same', activation=activation)(x)
+        dec_outputs = layers.Conv2D(3, (1, 1))(x)
+
+        decoder = tf.keras.Model(inputs=dec_inputs, outputs=dec_outputs, name='decoder')
+
+        model = tf.keras.Model(inputs=[enc_inputs], outputs=decoder(encoder(enc_inputs)),
+                            name=f'xceptional_{scaling_blocks}_AE_{AE}')
+
+        opt = tf.keras.optimizers.Nadam(learning_rate=learning_rate, beta_1=0.9,
+                                        beta_2=0.999, epsilon=None, decay=0.0)
+
+        model.compile(loss='mse', optimizer=opt)
+
+        print(model.summary())
+
+        return model, encoder, decoder
+
+    opt = tf.keras.optimizers.Nadam(learning_rate=learning_rate, beta_1=0.9,
+                                    beta_2=0.999, epsilon=None, decay=0.0)
+
+    model = tf.keras.Model(inputs=enc_inputs, outputs=enc_outputs,
+                        name=f'xceptional_{scaling_blocks}_AE_{AE}')
+
+    model.compile(loss='mse', optimizer=opt)
+
+    print(model.summary())
+
+    return model
+
+
+model, encoder, decoder = build_separable_conv_model(input_shape, scaling_blocks=4, flat_blocks=2, AE=True)
+
+cont = input('proceed with experiment?')
+
+if cont == 'stop':
+    raise ValueError()
+
+model.fit(df, df, batch_size=batch_size, epochs=150)
+
+tf.keras.models.save_model(model, f'autoenc_{time()}')
+tf.keras.models.save_model(encoder, f'enc_{time()}')
+tf.keras.models.save_model(decoder, f'dec_{time()}')
+
+inds = [0, 1, 2, 3, 4, 5, 6]
+ncols = len(inds)
+nrows = 2
+
+fig = plt.figure(figsize=(ncols, nrows), dpi=300)
+
+for i in inds:
+    ax = fig.add_subplot(nrows, ncols, i + 1)
+    ax.axes.xaxis.set_ticks([])
+    ax.axes.yaxis.set_ticks([])
+    prediction = model.predict(np.array([df[inds[i]], ]))
+    plt.imshow(array_to_img(prediction[0]))
+    ax = fig.add_subplot(nrows, ncols, i + 1 + ncols)
+    ax.axes.xaxis.set_ticks([])
+    ax.axes.yaxis.set_ticks([])
+    plt.imshow(array_to_img(df[inds[i]]))
+
+plt.show()
+
+        </code></pre>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">No Output For This Model</h5>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions
+            </div>
+            <div class="col align-self-center">
+                <p>
+                    Below I have included the code for my second attempt at a convolutional autoencoder that I built to try to learn a
+                    latent space representation for pokemon, and then of course reconstruct them from that latent representation.  This
+                    model is a bit cooler than the last. Motivated by the Xception network I utilize depthwise separable convolutions to
+                    operate individually on different channels of this image both in the encoder and the decoder.  Utilizing this strategy
+                    we can make the network deeper while reducing the number of parameters at each level.  Reducing the parameters has the dual
+                    benefit of also reducing the space required to store the intermediate outputs that are needed to compute the gradient during
+                    the backward pass, so this version is also more RAM-friendly taking only about 10GB (according to windows task manager) for
+                    the code shown below to executed for some training epochs.  Dispite this added benefit, I was running the code on my local machine
+                    so I only had access to about the amount of RAM I was using, and consequently I did have to reduce the size of the dataset.
+                    I chose to construct the dataset as shown with only the original images and their flipped versions.  This amounts to about
+                    500mbs of uint8 256 by 256 pixel 3 channel RGB images.  The configuration shown below is my best effort at reconstructing the optimal hyperparameters I found,
+                    and at the time of uploading I have lost the image for the best result I had obtained, and potentially some of the best hyperparameters.
+                    With about half of the parameters as the simple convolutional approach the xceptional model achieved very comparable performance.
+                    The screenshot I have included below is worse, as you can see the model has failed to capture the colors of the original image.
+                    This is very common in my experience with these models on these tasks and occurs at lower epoch levels, so perhaps I just need
+                    to train for more than 50 epochs.  As you will notice, the model makes use of "skip" or "residual" connections between blocks
+                    and layers I call "bottlenecks" which force the depthwise separable convolutional layers to merge after each block.  I have also
+                    implemented a variational version of this architecture using only a slight modification that will be included in the next post.
+                    The variational version gave me much more difficulty in training never achieving reasonable performance (at this point I assume
+                    I simply do not have enough data for this task).
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <pre><code id="bp2" class="python" style="background-color: white">
+import os
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from time import time
+
+from tensorflow.keras.preprocessing.image import load_img
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.preprocessing.image import array_to_img
+
+from os import listdir
+from os.path import isfile, join
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from math import log2 as log
+
+# os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
+
+mypath = './pokemon_img_jpg/'
+"""
+df = []
+for f in listdir(mypath):
+  if '-' not in f:
+    if isfile(join(mypath, f)):
+      try:
+        arr_img = img_to_array(load_img(join(mypath, f)))
+        df += [arr_img, np.flipud(arr_img)]
+        #df += [arr_img, np.flipud(arr_img), np.fliplr(arr_img), np.fliplr(np.flipud(arr_img)), np.rot90(arr_img), np.rot90(arr_img, k=3)]
+        #ones = np.ones_like(arr_img)
+        #zeroes = np.zeros_like(arr_img)
+        #twofiftyfives = ones*255
+        #df += [np.minimum(twofiftyfives, arr_img + i*ones) for i in range(4, 9, 4)]
+        #df += [np.maximum(zeroes, arr_img - i*ones) for i in range(4, 9, 4)]
+
+      except FileNotFoundError as e:
+        print(e)
+print(len(df))
+df = np.asarray(df)
+np.random.shuffle(df)
+
+df = df.astype(np.uint8)
+
+np.save('pkmn_dset_numpy', df)
+"""
+batch_size = 8
+
+df = np.load('pkmn_dset_numpy.npy')
+
+input_shape = (256, 256, 3)
+
+
+def build_decoder_model(input_shape, output_shape, activation):
+    init = tf.keras.initializers.LecunNormal()
+
+    dec_inputs = layers.Input(input_shape, name='dec_inputs')
+    x = layers.Reshape((16, 16, 1))(dec_inputs)
+
+    scaling_blocks = int(log(output_shape[0]) - log(input_shape[0] ** (1 / 2)))
+
+    skip = x
+
+    for block in range(scaling_blocks):
+        x = layers.UpSampling2D(2)(x)
+        # 2**(block + 4) = [16, 32, 64, 128]
+        x = layers.SeparableConv2D(2 ** (block + 4), (3, 3), strides=(1, 1), padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(2 ** (block + 4), (3, 3), strides=(1, 1), padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(2 ** (block + 4), (3, 3), strides=(1, 1), padding='same', kernel_initializer=init)(x)
+        x = layers.Conv2D(2 ** (block + 4), (1, 1),  kernel_initializer=init)(x)  # bottleneck
+        skip = layers.Conv2D(2 ** (block + 4), (1, 1), padding='same')(layers.UpSampling2D(2)(skip))
+        x = layers.Add()([x, skip])
+
+    x = layers.Conv2D(3, (3, 3), padding='same', activation=activation)(x)
+    dec_outputs = layers.Conv2D(3, (1, 1))(x)
+
+    decoder = tf.keras.Model(inputs=dec_inputs, outputs=dec_outputs, name='decoder')
+    print(decoder.summary())
+    return decoder
+
+
+def build_separable_conv_model(input_shape, scaling_blocks=1, flat_blocks=1,
+                               AE=False,
+                               activation='selu',
+                               learning_rate=0.001):
+    init = tf.keras.initializers.LecunNormal()
+
+    enc_inputs = layers.Input(input_shape, name='inputs')  # does not include batch size
+    x = layers.Conv2D(32, (3, 3), (2, 2), 'same', activation=activation, kernel_initializer=init)(enc_inputs)
+    skip = layers.Conv2D(68, (3, 3), (1, 1), 'same', activation=activation, kernel_initializer=init)(x)
+
+    x = skip
+    for block in range(scaling_blocks):
+        x = layers.SeparableConv2D(128, (3, 3), strides=(1, 1), padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(128, (3, 3), strides=(1, 1), padding='same', kernel_initializer=init)(x)
+        x = layers.MaxPooling2D((3, 3), (2, 2), padding='same')(x)
+        skip = layers.Conv2D(128, (1, 1), (2, 2), padding='same')(skip)
+        x = layers.Add()([x, skip])
+
+    for block in range(flat_blocks):
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(256, (3, 3), padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(256, (3, 3), padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(256, (3, 3), padding='same', kernel_initializer=init)(x)
+        x = layers.Conv2D(256, (1, 1),  kernel_initializer=init)(x)  # bottleneck
+        skip = layers.Conv2D(256, (1, 1), padding='same')(skip)
+        x = layers.Add()([x, skip])
+
+    enc_outputs = layers.GlobalAveragePooling2D()(x)
+
+    if AE:
+        opt = tf.keras.optimizers.Nadam(learning_rate=learning_rate, beta_1=0.9,
+                                        beta_2=0.999, epsilon=None, decay=0.0)
+
+        encoder = tf.keras.Model(inputs=enc_inputs, outputs=enc_outputs,
+                              name='xceptional_encoder')
+
+        decoder = build_decoder_model((256,), input_shape, activation)
+
+        model = tf.keras.Model(inputs=encoder.input, outputs=decoder(encoder.output),
+                            name=f'xceptional_{scaling_blocks}_AE_{AE}')
+
+        model.compile(loss='mse', optimizer=opt)
+
+        print(model.summary())
+
+        return model, encoder, decoder
+
+    opt = tf.keras.optimizers.Nadam(learning_rate=learning_rate, beta_1=0.9,
+                                    beta_2=0.999, epsilon=None)
+
+    model = tf.keras.Model(inputs=enc_inputs, outputs=enc_outputs,
+                        name=f'xceptional_{scaling_blocks}_AE_{AE}')
+
+    model.compile(loss='mse', optimizer=opt)
+
+    print(model.summary())
+
+    return model
+
+
+model, encoder, decoder = build_separable_conv_model(input_shape, scaling_blocks=4, flat_blocks=4, AE=True)
+
+cont = input('proceed with experiment?')
+
+if cont == 'stop':
+    raise ValueError()
+
+model.fit(df, df, batch_size=batch_size, epochs=65)
+
+tf.keras.models.save_model(model, f'autoenc_{time()}')
+tf.keras.models.save_model(encoder, f'enc_{time()}')
+tf.keras.models.save_model(decoder, f'dec_{time()}')
+
+inds = [0, 1, 2, 3, 4, 5, 6]
+ncols = len(inds)
+nrows = 2
+
+fig = plt.figure(figsize=(ncols, nrows), dpi=300)
+
+for i in inds:
+    ax = fig.add_subplot(nrows, ncols, i + 1)
+    ax.axes.xaxis.set_ticks([])
+    ax.axes.yaxis.set_ticks([])
+    prediction = model.predict(np.array([df[inds[i]], ]))
+    plt.imshow(array_to_img(prediction[0]))
+    ax = fig.add_subplot(nrows, ncols, i + 1 + ncols)
+    ax.axes.xaxis.set_ticks([])
+    ax.axes.yaxis.set_ticks([])
+    plt.imshow(array_to_img(df[inds[i]]))
+
+plt.show()
+
+        </code></pre>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">Output:</h5>
+        <img src="https://i.imgur.com/8nNMnA5.png" style="width:100%">
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                First Attempt at a Convolutional Autoencoder
+            </div>
+            <div class="col align-self-center">
+                <p>Below I have included the code for a simple convolutional autoencoder that I built to try to learn a hidden
+                representation for pokemon, and then of course reconstruct them from that hidden representation. Below the code is
+                a figure displaying 6 randomly chosen pokemon from my datasets and above them their corresponding reconstructions.  In this
+                first attempt my memory management and my architecture were both pretty sloppy.  I was using a numpy array of float32s
+                to store my images (which are RGB 3-channel 0-255).  In later examples I have changed this to uint8s, although the majority
+                of RAM usage is from the intermediate values held by tensorflow to reconstruct the gradient in the backward pass.  In this example
+                I build a series of stacked convolutional layers and a dense section.  I am aware that this could be fully convolutional, and in
+                later iterations you will see that I switch to that approach.  I perform dataset augmentation by rotating the images and flipping them
+                I also add constant values to all pixels on all levels and subtract constant values (ensuring to keep the pixel channels in valid range),
+                although using a dataset of this size quickly becomes infeasible due to the aforementioned RAM usage.  I tried several different activations,
+                kernel sizes, latent space sizes, and scaling techniques, but this configuration produced the best results (visually and in terms of
+                MSE loss).  As you can see the reconstruction is visually identifiable, but lacks definition.  It is definitely unsuitable
+                for the task of generating new pokemon, which is what I had hoped to be able to accomplish.</p>
             </div>
         </div>
     </div>
@@ -175,4 +848,6 @@ for i in inds:
         <img src="https://i.imgur.com/ceQAVrc.png" style="width:100%">
     </div>
 </div>
+
+
 {% endblock %}
