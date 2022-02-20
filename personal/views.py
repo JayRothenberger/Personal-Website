@@ -145,7 +145,7 @@ def rendezvous(request):
             sock2 = socket.socket(socket.AF_INET,  # Internet
                                   socket.SOCK_DGRAM)  # UDP
 
-            sock2.sendto(b"fuck you :)", (ip, port))
+            sock2.sendto(b":)", (ip, port))
 
         except Exception as e:
             logger.info(str(e))
@@ -158,3 +158,7 @@ def rendezvous(request):
         #P.join()
 
     return render(request, 'personal/test.html')
+
+
+def blog(request):
+    return render(request, 'personal/blog.html')
