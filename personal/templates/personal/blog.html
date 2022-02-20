@@ -33,20 +33,22 @@
             <div class="col align-self-left">
                 Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions and a Patchify Layer
             </div>
-            <div class="col align-self-center">
-                <p>
-                    Below I have included the code for my fourth attempt at constructing an autoencoder capable of reconstructing
-                    pokemon from a learned latent space.  In this iteration in the spirit of the newly released ConvNext architecture
-                    I make use of a patchify layer on the input.  Effectively this separates the input image into patches instead of
-                    the traditional maxpooling downsampling approach.  I am not confident I have implemented this in any useful way,
-                    and as of posting this the architechture below has not proven suitable for this task.  I still make use of the
-                    familiar skip connections and depthwise separable convolutions, but this model is much smaller.  I had hoped that
-                    the previous approaches simply were too complicated or deep, and that the blurryness that is evident in the earlier
-                    outputs was a result of the typical loss of definition that comes with depth in CNNs, however it appears that was not
-                    so.  Loss on this model has not been encouraging on preliminary tests, and I believe I may have to resign myself
-                    to the fact that 1400 images simply is not enough to learn this task.  This may be my last attempt at an architecture
-                    for this task, as I think it would be more gratifying to practice these techniques on an easier task such as classification.
-                </p>
+            <div class="row">
+                <div class="col align-self-center">
+                    <p>
+                        Below I have included the code for my fourth attempt at constructing an autoencoder capable of reconstructing
+                        pokemon from a learned latent space.  In this iteration in the spirit of the newly released ConvNext architecture
+                        I make use of a patchify layer on the input.  Effectively this separates the input image into patches instead of
+                        the traditional maxpooling downsampling approach.  I am not confident I have implemented this in any useful way,
+                        and as of posting this the architechture below has not proven suitable for this task.  I still make use of the
+                        familiar skip connections and depthwise separable convolutions, but this model is much smaller.  I had hoped that
+                        the previous approaches simply were too complicated or deep, and that the blurryness that is evident in the earlier
+                        outputs was a result of the typical loss of definition that comes with depth in CNNs, however it appears that was not
+                        so.  Loss on this model has not been encouraging on preliminary tests, and I believe I may have to resign myself
+                        to the fact that 1400 images simply is not enough to learn this task.  This may be my last attempt at an architecture
+                        for this task, as I think it would be more gratifying to practice these techniques on an easier task such as classification.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -246,6 +248,8 @@ plt.show()
             <div class="col align-self-left">
                 Variational Fully Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions
             </div>
+        </div>
+        <div class="row">
             <div class="col align-self-center">
                 <p>
                     Below I have included the code for my third attempt at a convolutional autoencoder for learning a representation of
@@ -470,7 +474,9 @@ plt.show()
             <div class="col align-self-left">
                 Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions
             </div>
-            <div class="col align-self-center">
+        </div>
+        <div class="row">
+                        <div class="col align-self-center">
                 <p>
                     Below I have included the code for my second attempt at a convolutional autoencoder that I built to try to learn a
                     latent space representation for pokemon, and then of course reconstruct them from that latent representation.  This
@@ -691,6 +697,8 @@ plt.show()
             <div class="col align-self-left">
                 First Attempt at a Convolutional Autoencoder
             </div>
+        </div>
+        <div class="row">
             <div class="col align-self-center">
                 <p>Below I have included the code for a simple convolutional autoencoder that I built to try to learn a hidden
                 representation for pokemon, and then of course reconstruct them from that hidden representation. Below the code is
