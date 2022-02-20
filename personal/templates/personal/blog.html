@@ -77,11 +77,7 @@ np.random.shuffle(df)
 
 x_train = df
 
-dataset = tf.data.Dataset.from_tensor_slices(df)
-dataset = tf.data.Dataset.zip((dataset, dataset))
-tf.data.experimental.save(dataset, 'drive/MyDrive/pokemon_jpg_tf_dataset')
-
-x_train.shape[1:]  # the shape of a np array is the shape of the elements??
+x_train.shape[1:]
 
 activation = 'selu'
 init = keras.initializers.LecunNormal()
@@ -176,7 +172,8 @@ for i in inds:
     </div>
     <div class="card-body" style="color:black">
         <h5 class="card-title">Output:</h5>
-        <img src="/personal/images/CNN_AE_out.png">
+        <img src="/personal/img/CNN_AE_out.png">
+        <img src="/img/CNN_AE_out.png">
     </div>
 </div>
 {% endblock %}
