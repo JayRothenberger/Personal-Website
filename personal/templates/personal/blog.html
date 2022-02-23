@@ -31,6 +31,159 @@
     <div class="card-header" style="color:black">
         <div class="row">
             <div class="col align-self-left">
+                <h5 class="card-title">Updating my Convolutional Autoencoder (Less params, larger filters)</h5>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+                <div class="col align-self-center">
+                    <p>
+                        Finally I was able to recreate my result for similar performance to the original convolutional
+                        AE with a model using many fewer parameters.  This model uses ~800,000 compared to the original
+                        ~2.5 million.  You can see that the output even achieves the color that was hard for previous
+                        models to capture.  In terms of MSE this model achieves ~1500, which is competitive (but slightly
+                        more) than that achieved by the model in my first post.  For this model I have only included
+                        the function I used to build the model and the corresponding call.  The issue was the Conv2D layer
+                        I was using to merge the depthwise separable layers.  I have also removed the maxpool layers in
+                        favor of larger strides, increased the filter sizes, and removed skip connections in the flat
+                        blocks.
+                    </p>
+                </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <pre><code id="bp5" class="python" style="background-color: white">
+import os
+
+import tensorflow as tf
+from tensorflow import keras
+#import tensorflow_addons as tfa
+from tensorflow.keras import layers
+from time import time
+
+from tensorflow.keras.preprocessing.image import load_img
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.preprocessing.image import array_to_img
+
+from os import listdir
+from os.path import isfile, join
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from math import log2 as log
+
+batch_size = 4
+
+df = np.load('pkmn_dset_numpy.npy')
+
+input_shape = (256, 256, 3)
+
+
+def build_separable_conv_model(input_shape, patch_blocks=1, flat_blocks=1,
+                               AE=False,
+                               activation='relu',
+                               learning_rate=0.001,
+                               flat_filters=256,
+                               scaling_filters=32,
+                               patch_size=(8, 8),
+                               decoder_filter_size=(4, 4),
+                               encoder_filter_size=(8, 8)):
+    init = tf.keras.initializers.LecunNormal()
+
+    enc_inputs = layers.Input(input_shape, name='inputs')  # does not include batch size
+    skip = layers.Conv2D(32, (8, 8), (2, 2), 'same', activation=activation, kernel_initializer=init)(enc_inputs)
+    x = skip
+
+    for block in range(patch_blocks):  # each downscales by 4
+        x = layers.Conv2D(scaling_filters, encoder_filter_size, (4, 4), padding='same')(x)  # patchify convolution
+        x = layers.SeparableConv2D(scaling_filters, encoder_filter_size, padding='same', kernel_initializer=init)(x)  # patches should interact
+        x = layers.Activation(activation)(x)  # activate
+        skip = layers.Conv2D(scaling_filters, encoder_filter_size, (4, 4), padding='same')(skip)
+        x = layers.Add()([x, skip])
+
+    for block in range(flat_blocks):
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(flat_filters, encoder_filter_size, padding='same', kernel_initializer=init)(x)
+        x = layers.Activation(activation)(x)
+        x = layers.SeparableConv2D(flat_filters, encoder_filter_size, padding='same', kernel_initializer=init)(x)
+        #x = layers.Conv2D(flat_filters, (4, 4),  kernel_initializer=init)(x)  # bottleneck
+        # skip = layers.Conv2D(flat_filters, (1, 1), padding='same')(skip)
+        # x = layers.Add()([x, skip])
+
+    enc_outputs = layers.GlobalAveragePooling2D()(x)
+
+    if AE:
+        encoder = tf.keras.Model(inputs=[enc_inputs], outputs=[enc_outputs],
+                              name='xceptional_smaller_encoder')
+
+        input_shape_dec = (flat_filters,)
+        output_shape_dec = input_shape
+
+        dec_inputs = layers.Input(input_shape_dec, name='dec_inputs')
+        dim = int(input_shape_dec[0] ** (1 / 2))
+        x = layers.Reshape((dim, dim, 1))(dec_inputs)
+
+        scaling_blocks_dec = int(log(output_shape_dec[0]) - log(input_shape_dec[0] ** (1 / 2)))
+
+        skip = x
+
+        for block in range(scaling_blocks_dec):
+            x = layers.UpSampling2D(2)(x)
+            # 2**(block + 4) = [16, 32, 64, 128]
+            x = layers.SeparableConv2D(2 ** ((scaling_blocks_dec - block) + 4), decoder_filter_size, strides=(1, 1), padding='same',
+                                       kernel_initializer=init)(x)
+            x = layers.Activation(activation)(x)
+            x = layers.SeparableConv2D(2 ** ((scaling_blocks_dec - block) + 4), decoder_filter_size, strides=(1, 1), padding='same',
+                                       kernel_initializer=init)(x)
+            x = layers.Activation(activation)(x)
+            x = layers.SeparableConv2D(2 ** ((scaling_blocks_dec - block) + 4), decoder_filter_size, strides=(1, 1), padding='same',
+                                       kernel_initializer=init)(x)
+            #x = layers.Conv2D(2 ** ((scaling_blocks_dec - block) + 4), (4, 4), kernel_initializer=init, padding='same')(x)  # bottleneck
+            skip = layers.Conv2D(2 ** ((scaling_blocks_dec - block) + 4), (1, 1), padding='same')(
+                layers.UpSampling2D(2)(skip))
+            x = layers.Add()([x, skip])
+
+        x = layers.Conv2D(3, (3, 3), padding='same', activation=activation)(x)
+        dec_outputs = layers.Conv2D(3, (1, 1))(x)
+
+        decoder = tf.keras.Model(inputs=dec_inputs, outputs=dec_outputs, name='xceptional_smaller_decoder')
+
+        model = tf.keras.Model(inputs=[enc_inputs], outputs=decoder(encoder(enc_inputs)),
+                            name=f'xceptional_smaller_{patch_blocks}_AE_{AE}')
+
+        opt = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+
+        model.compile(loss='mse', optimizer=opt)
+
+        print(model.summary())
+
+        return model, encoder, decoder
+
+    opt = tf.keras.optimizers.Nadam(learning_rate=learning_rate, beta_1=0.9,
+                                    beta_2=0.999, epsilon=None, decay=0.0)
+
+    model = tf.keras.Model(inputs=enc_inputs, outputs=enc_outputs,
+                        name=f'xceptional_smaller_{patch_blocks}_AE_{AE}')
+
+    model.compile(loss='mse', optimizer=opt)
+
+    print(model.summary())
+
+    return model
+
+model, encoder, decoder = build_separable_conv_model(input_shape, patch_blocks=2, flat_blocks=2, AE=True)
+        </code></pre>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">Output:</h5>
+        <img src="https://i.imgur.com/ogWDlXA.png">
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
                 <h5 class="card-title">Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions and a Patchify Layer</h5>
             </div>
         </div>
