@@ -31,6 +31,65 @@
     <div class="card-header" style="color:black">
         <div class="row">
             <div class="col align-self-left">
+                <h5 class="card-title">MNIST Digits Autoencoder Feature Map Visualizations</h5>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+                <div class="col align-self-center">
+                    <p>
+                        Using the following code on my MNIST digits autoencoder I achieved the average activations displayed
+                        below as images. The three rows correspond to the three different depthwise-separable convolutional
+                        layers that perform the scaling in the autoencoder.  Each row has 49 columns, one for each feature
+                        map in the corresponding layer.
+                    </p>
+                </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <pre><code id="bp6" class="python" style="background-color: white">
+layer_names = [layer.name for layer in encoder.layers if len(layer.output.shape) == 4][2:]
+layer_outputs = [layer.output for layer in encoder.layers if len(layer.output.shape) == 4][2:]
+
+feature_map_model = tf.keras.models.Model(inputs=[encoder.input], outputs=layer_outputs)
+feature_map_model.compile()
+
+feature_maps = [np.average(feature_map, axis=0) for feature_map in feature_map_model.predict(x_test)]
+print([feature_map.shape for feature_map in feature_maps])
+
+ncols = 49
+nrows = len(layer_names)
+fig = plt.figure(figsize=(ncols, nrows))
+row = 0
+for layer_name, feature_map in zip(layer_names, feature_maps):
+    k = feature_map.shape[-1]
+    size = feature_map.shape[1]
+    for i in range(k):
+        # iterating over a feature map of a particular layer to separate all feature images.
+        feature_image = feature_map[:, :, i]
+        feature_image -= feature_image.mean()
+        feature_image /= feature_image.std()
+        feature_image *= 64
+        feature_image += 128
+        feature_image = np.clip(feature_image, 0, 255).astype('uint8')
+        ax = fig.add_subplot(nrows, ncols, row * ncols + i + 1)
+        ax.axes.xaxis.set_ticks([])
+        ax.axes.yaxis.set_ticks([])
+        plt.imshow(array_to_img(np.expand_dims(feature_image, axis=-1)))
+
+    row += 1
+plt.show()
+        </code></pre>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">Output:</h5>
+        <img src="https://i.imgur.com/1Z2f6hQ.png" style="width:100%">
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
                 <h5 class="card-title">New Experiment: MNIST Digits</h5>
             </div>
         </div>
