@@ -46,7 +46,7 @@
                         on the training set might be able to identify such examples at test time, and thus by rejecting
                         such examples we could achieve better generalization performance.  This way I hoped to make typically
                         brittle classifiers (decision trees, neural networks, random forests) more robust to some input
-                        perturbation (in this case gaussian noise).<br>
+                        perturbation (in this case gaussian noise).<br><br>
 
                         In the first image you can see the effect of adding random noise to the reconstruction error.
                         Adding noise to the image usually (but not always) increases the reconstruction error by some amount.
@@ -55,42 +55,42 @@
                         the second figure pixel values were not only clipped, but cast to integers to remain in the valid
                         integer domain Z/(256)Z. The threshold in both figures was chosen as the 95th percentile reconstruction
                         error over the training set.  The threshold represents the level which a testing sample has to
-                        reach in order to be rejected (not classified).<br>
+                        reach in order to be rejected (not classified).<br><br>
 
                         From the text results below you can see that the technique never decreases accuracy, and in most
-                        cases results in some nominal increase in accuracy.<br>
+                        cases results in some nominal increase in accuracy.<br><br>
 
-                        The second images rows should be interpreted as follows:<br>
+                        The second images rows should be interpreted as follows:<br><br>
                         Rows 1-4 : [5 best samples rejected, " (with coresp. noise), 5 worst samples rejected, " (with coresp. noise)]<br>
                         Rows 5-8 : [5 best samples kept, " (with coresp. noise), 5 worst samples kept, " (with coresp. noise)]<br>
-                        integer casting is not shown as it is visually imperceptible.<br>
+                        integer casting is not shown as it is visually imperceptible.<br><br>
 
-                        best and worst refer to the magnitude of reconstruction error.<br>
+                        best and worst refer to the magnitude of reconstruction error.<br><br>
 
-                        From this figure and our accuracy results we can draw a few interesting conclusions:<br>
+                        From this figure and our accuracy results we can draw a few interesting conclusions:<br><br>
 
                         First, it seems that reconstruction error is largely dominated by the difficulty of classifying
                         the original image.  The rejected samples are visually difficult to identify as their respective
                         digits compared  to the better samples kept.  This is particularly noticeable when considering that
-                        the very best kept samples are all single-line 1s.<br>
+                        the very best kept samples are all single-line 1s.<br><br>
 
                         Second, interestingly the most brittle classifiers are those with the fewest parameters.  This is
                         slightly counterintuitive when considering the typical wisdom about overfitting and regularization,
                         but it seems that in this case the noise has the greatest effect on the tree-based classifiers.
                         This could also be because the neural network is continuous, and thus not effected as much by the
-                        smaller perturbations that are present in gaussian noise.<br>
+                        smaller perturbations that are present in gaussian noise.<br><br>
 
                         In the future I think I will try different types of noise.  Perhaps salt and pepper noise or uniform
                         noise will yield different brittleness results for the different classifiers.  It also may be useful
                         to perform the thresholding on the training set as well, as it seems like some of the worst reconstructed
                         digits are rather nasty examples.  It would also be nice to be able to try to find minimum adversarial
                         perturbations for each of these models.  This is feasible for the neural network, but is at least
-                        exponentially hard for the decision tree models.<br>
+                        exponentially hard for the decision tree models.<br><br>
 
                         code is available on <a href="https://github.com/JayRothenberger/AETree">my github</a> if you would
                         like to try for yourself, although at the time of writing I have not yet documented it.  running
                         "python main.py --tree --nn --forest --noise" with the correct directory structure should perform
-                        the experiment and show the figures.<br>
+                        the experiment and show the figures.<br><br>
                     </p>
                 </div>
         </div>
