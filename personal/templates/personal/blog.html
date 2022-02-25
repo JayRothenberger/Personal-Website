@@ -39,11 +39,11 @@
                 <div class="col align-self-center">
                     <p>
                         Using my MNIST digits Autoencoder I wanted to see if I could detect examples that would be difficult
-                        to classify in the latent space by their reconstruction error.  Intuitively I supposed that if it
-                        were difficult for the decoder to decode the latent representation, that the features must define
+                        to classify in the latent space by their reconstruction error.  Intuitively, I supposed that if it
+                        were difficult for the decoder to decode the latent representation, then the features must define
                         some atypical example that would be difficult for a classifier to classify, as it was not representative
                         of the original training distribution.  I thought that the reconstruction error of an AE learned
-                        on the training set might be able to identify such examples at test time, and thus by rejecting
+                        on the training set might be able to identify such examples at test time, thus by rejecting
                         such examples we could achieve better generalization performance.  This way I hoped to make typically
                         brittle classifiers (decision trees, neural networks, random forests) more robust to some input
                         perturbation (in this case gaussian noise).<br><br>
@@ -57,7 +57,7 @@
                         error over the training set.  The threshold represents the level which a testing sample has to
                         reach in order to be rejected (not classified).<br><br>
 
-                        From the text results below you can see that the technique never decreases accuracy, and in most
+                        From the text results below you can see that the technique never decreases accuracy, and in all
                         cases results in some nominal increase in accuracy.<br><br>
 
                         The second images rows should be interpreted as follows:<br><br>
