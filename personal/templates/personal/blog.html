@@ -31,6 +31,110 @@
     <div class="card-header" style="color:black">
         <div class="row">
             <div class="col align-self-left">
+                <h5 class="card-title">Using Autoencoders to Identify Out-of-Domain Examples and Reject</h5>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+                <div class="col align-self-center">
+                    <p>
+                        My focus has shifted to identifying out-of-domain samples to reject with my autoencoder.  Towards
+                        this goal I have implemented a variational version of my autoencoder for the MNIST digits task that
+                        achieves similar (within ~100 MSE on most runs, and particularly on the model being evaluated below)
+                        error on the task.  I use both types of autoencoders to evaluate testing samples and reject those
+                        samples that would have reconstruction error about the 95th percentile of the training data.  In
+                        this way I attempt to give the model an option to discard samples it believes it cannot classify<br><br>
+
+                        Below are shown my results.  All models evaluated were trained on a "pure" training sample, that is
+                        if any of the training samples were to appear at testing time they would not be rejected, as they
+                        do not exceed the reconstruction error threshold.  This is performed so that the distributions between
+                        training and testing are as similar as possible (as the stationary assumption is common in the
+                        theoretical justification for most machine learning models).<br><br>
+
+                        From the results it can be seen that the variational autoencoder is much more tolerant to
+                        the noise in the testing sample in terms of the reconstruction error.  This turns out to be quite
+                        problematic as it also produces latent space representations that are quite brittle for the classifiers.
+                        The noise has an enormous negative effect on the classification accuracy compared to the latent
+                        space representation achieved by the deterministic autoencoder.  Conversely the deterministic
+                        autoencoder is much less tolerant to the noise in the testing sample, and this can be interpreted
+                        as making it much more adept at identifying the distribution shift. <br><br>
+
+                        Both rejection strategies help the neural network achieve a higher performance on the testing set.
+                          However, not all models experience this benefit equally with the variational strategy.  In both cases
+                        the variational rejection strategy actually make the performance of the models worse.  The deterministic
+                        rejection strategy, however, provides significant improvement across all classifications strategies. <br><br>
+
+                        In future, I plan to test training on the noisy examples, training to denoise, and whether the AE
+                        can recognize different forms of distribution shifts or reject adversarial inputs when trained on
+                        clean data.  This code is available on my gitub, and most of it is documented at the time of posting.<br><br>
+
+                        running: <br><br> "python main.py --nn --tree --forest --noise --load --newnn" <br><br>
+                        and "python main.py --nn --tree --forest --noise --load --newnn --var" <br><br>
+                        will produce the outputs for this experiment.
+                    </p>
+                </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <pre><code id="bp8" class="python" style="background-color: white">
+print('no code this time :)')
+"""
+# code can be found at https://github.com/JayRothenberger/AETree
+# Results: ( all numbers given are categorical accuracy = (TP + TN) / (TP + FP + TN + FN) )
+
+            Decision Tree (depth 16, gini):
+            (Deterministic)
+baseline     - train, test: 0.9405166666666667, 0.84
+noisy        - train, test: 0.56495, 0.5548
+noisy int    - train, test: 0.5778666666666666, 0.5656
+noisy reject - noise, int : 0.6563769293257514, 0.6608929007074896
+rejected samples: 6307, 5901
+            (Variational)
+baseline     - train, test: 0.9307333333333333, 0.8506
+noisy        - train, test: 0.4554666666666667, 0.4496
+noisy int    - train, test: 0.4670166666666667, 0.4603
+noisy reject - noise, int : 0.4266710461487929, 0.44140077821011675
+rejected samples: 3911, 3575
+
+            Random Forest (250 trees, max depth 9):
+            (Deterministic)
+baseline     - train, test: 0.9358333333333333, 0.9169
+noisy        - train, test: 0.77185, 0.7722
+noisy int    - train, test: 0.7824333333333333, 0.7836
+noisy reject - noise, int : 0.8711075006769564, 0.8728958282507929
+rejected samples: 6307, 5901
+            (Variational)
+baseline     - train, test: 0.9259666666666667, 0.9131
+noisy        - train, test: 0.5807666666666667, 0.5727
+noisy int    - train, test: 0.5900333333333333, 0.5821
+noisy reject - noise, int : 0.5332566923961242, 0.549727626459144
+rejected samples: 3911, 3575
+
+            Neural Network ( Dense(10, softmax)(Dense(49, selu)) ):
+            (Deterministic)
+baseline     - train, test: 0.9345666766166687, 0.9358000159263611
+noisy        - train, test: 0.7833666801452637, 0.7821000218391418
+noisy int    - train, test: 0.7911499738693237, 0.7914999723434448
+noisy reject - noise, int : 0.8329271674156189, 0.834837794303894
+rejected samples: 6307, 5901
+            (Variational)
+baseline     - train, test: 0.9498833417892456, 0.9491999745368958
+noisy        - train, test: 0.8301666378974915, 0.8342999815940857
+noisy int    - train, test: 0.8414499759674072, 0.8468999862670898
+noisy reject - noise, int : 0.8856955170631409, 0.8915175199508667
+rejected samples: 3911, 3575
+
+"""
+        </code></pre>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">No fun pictures this time :(</h5>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
                 <h5 class="card-title">Autoencoder Reconstruction Error as a Reject Criterion</h5>
             </div>
         </div>
