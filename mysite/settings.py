@@ -32,7 +32,7 @@ SECRET_KEY = "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.136']
+ALLOWED_HOSTS = ['192.168.1.136', 'lit-anchorage-76692-04d59e3e86c5.herokuapp.com']
 
 
 # Application definition
