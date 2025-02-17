@@ -165,3 +165,9 @@ def blog(request):
 
 def cv(request):
     return render(request, 'personal/cv.html')
+
+def resume(request):
+    return render(request, 'personal/resume.html')
+
+def publications(request):
+    return render(request, 'personal/publications.html')

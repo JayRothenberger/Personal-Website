@@ -1,0 +1,85 @@
+{% extends 'personal/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    textarea {
+        background-color: black !important;
+    }
+
+    .card{
+
+        margin-bottom: 10 !important;
+
+    }
+    .python{
+
+        padding-left: 5%;
+
+    }
+    .ovf{
+
+        overflow: "scroll" !important;
+
+    }
+    .btn{
+        margin: 5px;
+    }
+
+</style>
+<script>hljs.initHighlightingOnLoad();</script>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                <h5 class="card-title">Awards</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col align-self-center">
+                <h5 class="card-title"> <strong>(05/2024)</strong> Oklahoma Center for Advancement of Science \& Technology</h5>
+                <p>
+                    Machine Learning Algorithms for Oil and Gas Leak Detection and Operator Notification - $30,000
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                <h5 class="card-title">Publications</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col align-self-center">
+                <p>
+                   Put the publications here
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                <h5 class="card-title">Conferences and Symposia</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col align-self-center">
+                <p>
+                   Put the conference abstracts here
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
