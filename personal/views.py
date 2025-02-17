@@ -162,3 +162,6 @@ def rendezvous(request):
 
 def blog(request):
     return render(request, 'personal/blog.html')
+
+def cv(request):
+    return render(request, 'personal/cv.html')
