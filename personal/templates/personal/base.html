@@ -22,16 +22,16 @@ html, body {
 }
 
 #cut {
-    height: 250px;
+    height: 200px;
     width: inherit;
-    clip-path: polygon(0 0, 100% 0, 100% 15%, 0% 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 38%, 0% 100%);
     background-color: white;
     color: black;
 }
 
 #footer-cut {
     background-color: white;
-    clip-path: polygon(0 85%, 100% 0, 100% 100%, 0% 100%);
+    clip-path: polygon(0 62%, 100% 0, 100% 100%, 0% 100%);
     color: black;
 }
 
@@ -42,13 +42,13 @@ html, body {
 #container {
   min-height: 100%;
   overflow:auto;
-  padding-bottom:150px; /* this needs to be bigger than footer height*/
+  padding-bottom:200px; /* this needs to be bigger than footer height*/
 }
 
 .footer {
   position: fixed;
   bottom: 0;
-  height: 250px;
+  height: 200px;
   clear:both;
   padding-top:20px;
 }
@@ -86,7 +86,7 @@ html, body {
         </nav>
         <div class='container'>
             <div class='row'>
-                <div class='col-lg' style='padding: 0px 50px 50px 50px;;'>
+                <div class='col-lg' style='padding: 50px 50px 50px 50px;;'>
                     {% block content %}
                     {% endblock %}
                 </div>
