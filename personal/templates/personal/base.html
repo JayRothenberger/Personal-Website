@@ -24,14 +24,14 @@ html, body {
 #cut {
     height: 150px;
     width: inherit;
-    clip-path: polygon(0 0, 100% 0, 100% 11%, 0% 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 38%, 0% 100%);
     background-color: white;
     color: black;
 }
 
 #footer-cut {
     background-color: white;
-    clip-path: polygon(0 95%, 100% 0, 100% 100%, 0% 100%);
+    clip-path: polygon(0 62%, 100% 0, 100% 100%, 0% 100%);
     color: black;
 }
 
@@ -46,8 +46,8 @@ html, body {
 }
 
 .footer {
-  position: relative;
-  margin-top: -150px; /* negative value of footer height */
+  position: fixed;
+  bottom: 0;
   height: 150px;
   clear:both;
   padding-top:20px;
@@ -67,10 +67,16 @@ html, body {
                         <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/code/">Code Snippets</a>
+                        <a class="nav-link" href="/cv/">Curriculum Vitae</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/ponder/">Ponder Orb</a>
+                        <a class="nav-link" href="/resume/">Resume</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/publications/">Publications and Awards</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/code/">Code Snippets</a>
                     </li>
                     {% block nav_items %}
 
@@ -80,7 +86,7 @@ html, body {
         </nav>
         <div class='container'>
             <div class='row'>
-                <div class='col-lg' style='padding: 0px 50px 50px 50px;;'>
+                <div class='col-lg' style='padding: 50px 50px 50px 50px;;'>
                     {% block content %}
                     {% endblock %}
                 </div>
@@ -116,7 +122,7 @@ html, body {
     <!-- Footer Links -->
 
     <!-- Copyright -->
-    <div class="footer-copyright text-right py-3">© 2022 Copyright:
+    <div class="footer-copyright text-right py-3">© 2025 Copyright:
       <a> Jay Rothenberger (jay.c.rothenberger@ou.edu)</a>
     </div>
     <!-- Copyright -->

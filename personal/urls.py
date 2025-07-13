@@ -11,4 +11,7 @@ urlpatterns = [
     path('ide/', views.ide, name='ide'),
     path('run/', views.run, name='run'),
     path('rendezvous/', views.rendezvous, name='rendezvous'),
+    path('cv/', views.cv, name='cv'),
+    path('resume/', views.resume, name='resume'),
+    path('publications/', views.publications, name='publications'),
 ]

@@ -1,0 +1,44 @@
+{% extends 'personal/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    textarea {
+        background-color: black !important;
+    }
+
+    .card{
+
+        margin-bottom: 10 !important;
+
+    }
+    .python{
+
+        padding-left: 5%;
+
+    }
+    .ovf{
+
+        overflow: "scroll" !important;
+
+    }
+    .btn{
+        margin: 5px;
+    }
+
+</style>
+<script>hljs.initHighlightingOnLoad();</script>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                <h3 class="card-title">Resume</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:black">
+        <h5 class="card-title">Output:</h5>
+        <embed src="{% static 'Resume_Jay_Rothenberger.pdf' %}" height="1200px" style="width:100%" />
+    </div>
+</div>
+
+{% endblock %}

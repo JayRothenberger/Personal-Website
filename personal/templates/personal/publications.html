@@ -1,0 +1,133 @@
+{% extends 'personal/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    textarea {
+        background-color: black !important;
+    }
+
+    .card{
+
+        margin-bottom: 10 !important;
+
+    }
+    .python{
+
+        padding-left: 5%;
+
+    }
+    .ovf{
+
+        overflow: "scroll" !important;
+
+    }
+    .btn{
+        margin: 5px;
+    }
+
+</style>
+<script>hljs.initHighlightingOnLoad();</script>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                <h3 class="card-title">Awards</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:black">
+        <div class="row">
+            <div class="col align-self-center">
+                <h5 class="card-title"> <strong>(10/2024)</strong> National AI Readiness Resource Pilot</h5>
+                <p>
+                    Training a Foundation Model for the EMIT Instrument - 12,000 GPU Hours
+                </p>
+                <h5 class="card-title"> <strong>(05/2024)</strong> Oklahoma Center for Advancement of Science & Technology</h5>
+                <p>
+                    Machine Learning Algorithms for Oil and Gas Leak Detection and Operator Notification - $30,000
+                </p>
+                <h5 class="card-title"> <strong>(11/2023)</strong> NSF Travel Grant</h5>
+                <p>
+                    $1,500
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                <h3 class="card-title">Publications</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:black">
+        <div class="row">
+            <div class="col align-self-center">
+                <h4 class="card-title"> <strong>(2024)</strong></h4>
+                <h6 class="card-title"> <a href="https://arxiv.org/abs/2408.07221">A Review of Pseudo-Labeling for Computer Vision</a> </h6>
+                <p>
+                    <strong>Jay C. Rothenberger</strong>, Patrick Kage, Pavlos Andreadis, Dimitris I. Diochnos
+                </p>
+                <h4 class="card-title"> <strong>(2024)</strong></h4>
+                <h6 class="card-title"> <a href="https://arxiv.org/abs/2311.18083">Two Views are Better than One: Meta Co-Training</a></h6>
+                <p>
+                    <strong>Jay C. Rothenberger</strong>, Dimitris I. Diochnos
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                <h3 class="card-title">Presentations in Conferences and Symposia</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:black">
+        <div class="row">
+            <div class="col align-self-center">
+                <h4 class="card-title"> <strong>(2025)</strong></h4>
+                <h6 class="card-title"> Improving Road Surface Classification with Co-Training Algorithms <br><strong>American Meteorological Society (AMS)</strong></h6>
+                <p>
+                    <strong>Jay C. Rothenberger</strong>, Tiffany Le, Carly Sutter, Kara J. Sulia, Dimitrios I. Diochnos
+                    <br>
+                    <strong>Best Student Presentation - Honorable Mention</strong>
+                </p>
+                <h6 class="card-title"> Predicting Forecast Error of Numerical Weather Prediction Models using an LSTM <br><strong>American Meteorological Society (AMS)</strong></h6>
+                <p>
+                    David Aaron Evans, Kara J. Sulia, Nick P. Bassill, Christopher D. Thorncroft, Lauriana Gaudet, <strong>Jay C. Rothenberger</strong>
+                </p>
+                <h4 class="card-title"> <strong>(2024)</strong></h4>
+                <h6 class="card-title"> Two Views are Better than One: Meta Co-Training <br><strong>International Symposium on Artifical Intelliegence and Mathematics (ISAIM)</strong></h6>
+                <p>
+                    <strong>Jay C. Rothenberger</strong>, Dimitrios I. Diochnos
+                </p>
+                <h6 class="card-title">Explaining The Role of Lightning Data in Hail Nowcasting <br><strong>American Meteorological Society (AMS)</strong></h6>
+                <p>
+                    <strong>Jay C. Rothenberger</strong>, Eric P. Grimit, Martin J. Murphy, Robinson Wallace
+                    <br>
+                </p>
+                <h6 class="card-title">The Promise of Foundation Models for Improving Automated Detection of Methane Sources in Hyperspectral Imagers: A Case Study for the EMIT Instrument <br><strong>American Geophysical Union (AGU)</strong></h6>
+                <p>
+                    <strong>Jay C. Rothenberger</strong>, Sean Crowell, William Keely, Dan Cusworth, Kate Howell
+                    <br>
+                </p>
+                <h4 class="card-title"> <strong>(2023)</strong></h4>
+                <h6 class="card-title">Classifying Road Surface Conditions with Self-Trained Artificial Intelligence <br><strong>American Meteorological Society (AMS)</strong></h6>
+                <p>
+                    Vincent Ferrerra, <strong>Jay C. Rothenberger</strong>, Melissa Wilson Reyes, Carly Sutter, Andrew H. Fagg, Dimitrios I. Diochnos
+                </p>
+                <h4 class="card-title"> <strong>(2022)</strong></h4>
+                <h6 class="card-title">Classifying Road Surface Conditions with Self-Trained Artificial Intelligence <br><strong>New York State Mesonet AI Symposium</strong></h6>
+                <p>
+                    Vincent Ferrerra, <strong>Jay C. Rothenberger</strong>, Melissa Wilson Reyes, Carly Sutter, Andrew H. Fagg, Dimitrios I. Diochnos
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
