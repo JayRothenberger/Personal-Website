@@ -169,5 +169,5 @@ def cv(request):
 def resume(request):
     return render(request, 'personal/resume.html')
 
-def publications(request):
-    return render(request, 'personal/publications.html')
+def links(request):
+    return render(request, 'personal/links.html')
