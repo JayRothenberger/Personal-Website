@@ -1,0 +1,82 @@
+{% extends 'personal/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    textarea {
+        background-color: black !important;
+    }
+
+    .card{
+
+        margin-bottom: 10 !important;
+
+    }
+    .python{
+
+        padding-left: 5%;
+
+    }
+    .ovf{
+
+        overflow: "scroll" !important;
+
+    }
+    .btn{
+        margin: 5px;
+    }
+
+</style>
+<script>hljs.initHighlightingOnLoad();</script>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                <h3 class="card-title">Publications</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:black">
+        <div class="row">
+            <div class="col align-self-center">
+                <h4 class="card-title"> <strong>(2026)</strong></h4>
+                <h6 class="card-title"> <a href="https://arxiv.org/abs/2512.14898">Predicting Forecast Error for the HRRR Using LSTM Neural Networks: A Comparative Study Using New York and Oklahoma State Mesonets</a> </h6>
+                <p>
+                    David Aaron Evans, Kara J. Sulia, Nick P. Bassill, Chris D. Thorncroft, <strong>Jay C. Rothenberger</strong>, Lauriana C. Gaudet
+                </p>
+                <h6 class="card-title"> <a href="https://arxiv.org/abs/2510.06440">Road Surface Condition Detection with Machine Learning using New York State Department of Transportation Camera Images and Weather Forecast Data</a> </h6>
+                <p>
+                    Carly Sutter, Kara J. Sulia, Nick P. Bassill, Christopher D. Wirz, Christopher D. Thorncroft, <strong>Jay C. Rothenberger</strong>, Vanessa Przybylo, Mariana G. Cains, Jacob Radford, David Aaron Evans
+                </p>
+                <h4 class="card-title"> <strong>(2025)</strong></h4>
+                <h6 class="card-title"> <a href="https://arxiv.org/abs/2408.07221">A Review of Pseudo-Labeling for Computer Vision (JAIR)</a> </h6>
+                <p>
+                    <strong>Jay C. Rothenberger</strong>, Patrick Kage, Pavlos Andreadis, Dimitris I. Diochnos
+                </p>
+                <h6 class="card-title"> <a href="https://arxiv.org/abs/2311.18083">Two Views are Better than One: Meta Co-Training (ECAI 2025)</a></h6>
+                <p>
+                    <strong>Jay C. Rothenberger</strong>, Dimitris I. Diochnos
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header" style="color:black">
+        <div class="row">
+            <div class="col align-self-left">
+                <h3 class="card-title">People</h3>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="color:black">
+        <div class="row">
+            <div class="col align-self-center">
+                <h6 class="card-title"> <a href="https://diochnos.com/">Dimitris Diochnos</a> </h6>
+                <p>
+                <strong>Δημήτρης Διώχνος</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
