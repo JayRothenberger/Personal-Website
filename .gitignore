@@ -1,4 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
 
-personal/templates/personal/base.html
-personal/templates/personal/base.html
-personal/templates/personal/base.html
+# Django
+db.sqlite3
+staticfiles/
+
+# Local configuration and secrets
+.env
+.env.*
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store

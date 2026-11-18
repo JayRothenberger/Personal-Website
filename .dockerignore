@@ -1,4 +1,15 @@
-__pycache__
-*.pyc
+.git
+.gitignore
+.dockerignore
+.venv/
+venv/
 env/
+__pycache__/
+*.py[cod]
 db.sqlite3
+staticfiles/
+.env
+.env.*
+.idea/
+.vscode/
+.DS_Store

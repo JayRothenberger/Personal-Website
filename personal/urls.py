@@ -1,14 +1,18 @@
-from django.contrib import admin
-from django.urls import include, path
-from . import views
-app_name = 'personal'
+from django.urls import path
+from django.views.generic import TemplateView
+
+app_name = "personal"
+
+
+def page(template):
+    return TemplateView.as_view(template_name=f"personal/{template}.html")
+
+
 urlpatterns = [
-    path('', views.index_view, name='index'),
-    path('ponder/', views.test, name='ponder'),
-    path('blog/', views.blog, name='blog'),
-    path('run/', views.run, name='run'),
-    path('rendezvous/', views.rendezvous, name='rendezvous'),
-    path('cv/', views.cv, name='cv'),
-    path('resume/', views.resume, name='resume'),
-    path('links/', views.links, name='links'),
+    path("", page("index"), name="index"),
+    path("ponder/", page("test"), name="ponder"),
+    path("blog/", page("blog"), name="blog"),
+    path("cv/", page("cv"), name="cv"),
+    path("resume/", page("resume"), name="resume"),
+    path("links/", page("links"), name="links"),
 ]
