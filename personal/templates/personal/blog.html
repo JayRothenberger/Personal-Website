@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <div class="card">
-    <div class="card-header" style="color:black">
+    <div class="card-header">
         <div class="row">
             <div class="col align-self-left">
                 <h5 class="card-title">Using Autoencoders to Identify Out-of-Domain Examples and Reject</h5>
@@ -101,12 +101,12 @@ rejected samples: 3911, 3575
 """
         </code></pre>
     </div>
-    <div class="card-body" style="color:black">
+    <div class="card-body">
         <h5 class="card-title">No fun pictures this time :(</h5>
     </div>
 </div>
 <div class="card">
-    <div class="card-header" style="color:black">
+    <div class="card-header">
         <div class="row">
             <div class="col align-self-left">
                 <h5 class="card-title">Autoencoder Reconstruction Error as a Reject Criterion</h5>
@@ -203,14 +203,14 @@ rejected samples: 479, 441
 """
         </code></pre>
     </div>
-    <div class="card-body" style="color:black">
+    <div class="card-body">
         <h5 class="card-title">Output:</h5>
         <embed src="{% static 'CV_Jay_Rothenberger.pdf' %}" height="2100px" style="width:100%" />
         <img src="https://i.imgur.com/erm6FhR.png" style="width:100%">
     </div>
 </div>
 <div class="card">
-    <div class="card-header" style="color:black">
+    <div class="card-header">
         <div class="row">
             <div class="col align-self-left">
                 <h5 class="card-title">MNIST Digits Autoencoder Feature Map Visualizations</h5>
@@ -263,13 +263,13 @@ for layer_name, feature_map in zip(layer_names, feature_maps):
 plt.show()
         </code></pre>
     </div>
-    <div class="card-body" style="color:black">
+    <div class="card-body">
         <h5 class="card-title">Output:</h5>
         <img src="https://i.imgur.com/1Z2f6hQ.png" style="width:100%">
     </div>
 </div>
 <div class="card">
-    <div class="card-header" style="color:black">
+    <div class="card-header">
         <div class="row">
             <div class="col align-self-left">
                 <h5 class="card-title">New Experiment: MNIST Digits</h5>
@@ -413,13 +413,13 @@ if __name__ == '__main__':
     plt.show()
         </code></pre>
     </div>
-    <div class="card-body" style="color:black">
+    <div class="card-body">
         <h5 class="card-title">Output:</h5>
         <img src="https://i.imgur.com/Gt4GD40.png" style="width:100%">
     </div>
 </div>
 <div class="card">
-    <div class="card-header" style="color:black">
+    <div class="card-header">
         <div class="row">
             <div class="col align-self-left">
                 <h5 class="card-title">Updating my Convolutional Autoencoder (Less params, larger filters)</h5>
@@ -566,13 +566,13 @@ def build_separable_conv_model(input_shape, patch_blocks=1, flat_blocks=1,
 model, encoder, decoder = build_separable_conv_model(input_shape, patch_blocks=2, flat_blocks=2, AE=True)
         </code></pre>
     </div>
-    <div class="card-body" style="color:black">
+    <div class="card-body">
         <h5 class="card-title">Output:</h5>
         <img src="https://i.imgur.com/ogWDlXA.png" style="width:100%">
     </div>
 </div>
 <div class="card">
-    <div class="card-header" style="color:black">
+    <div class="card-header">
         <div class="row">
             <div class="col align-self-left">
                 <h5 class="card-title">Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions and a Patchify Layer</h5>
@@ -782,13 +782,13 @@ plt.show()
 
         </code></pre>
     </div>
-    <div class="card-body" style="color:black">
+    <div class="card-body">
         <h5 class="card-title">No Output For This Model</h5>
     </div>
 </div>
 
 <div class="card">
-    <div class="card-header" style="color:black">
+    <div class="card-header">
         <div class="row">
             <div class="col align-self-left">
                 <h5 class="card-title">Variational Fully Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions</h5>
@@ -1010,12 +1010,12 @@ plt.show()
 
         </code></pre>
     </div>
-    <div class="card-body" style="color:black">
+    <div class="card-body">
         <h5 class="card-title">No Output For This Model</h5>
     </div>
 </div>
 <div class="card">
-    <div class="card-header" style="color:black">
+    <div class="card-header">
         <div class="row">
             <div class="col align-self-left">
                 <h5 class="card-title">Convolutional Autoencoder using Xception-like Depthwise Separable Convolutions</h5>
@@ -1232,14 +1232,14 @@ plt.show()
 
         </code></pre>
     </div>
-    <div class="card-body" style="color:black">
+    <div class="card-body">
         <h5 class="card-title">Output:</h5>
         <img src="https://i.imgur.com/8nNMnA5.png" style="width:100%">
     </div>
 </div>
 
 <div class="card">
-    <div class="card-header" style="color:black">
+    <div class="card-header">
         <div class="row">
             <div class="col align-self-left">
                 <h5 class="card-title">First Attempt at a Convolutional Autoencoder</h5>
@@ -1399,7 +1399,7 @@ for i in inds:
   plt.imshow(array_to_img(x_train[inds[i]]))
         </code></pre>
     </div>
-    <div class="card-body" style="color:black">
+    <div class="card-body">
         <h5 class="card-title">Output:</h5>
         <img src="https://i.imgur.com/ceQAVrc.png" style="width:100%">
     </div>

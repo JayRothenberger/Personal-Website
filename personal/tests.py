@@ -8,7 +8,7 @@ PLAIN_STATIC = {
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 
-PAGES = ["index", "ponder", "blog", "cv", "resume", "links"]
+PAGES = ["index", "ponder", "blog", "cv", "resume", "links", "planetarium"]
 
 
 @override_settings(STORAGES=PLAIN_STATIC, SECURE_SSL_REDIRECT=False)
