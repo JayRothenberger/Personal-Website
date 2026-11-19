@@ -36,24 +36,50 @@
             pointer-events: none;
         }
 
+        /* no rubber-band past the top or bottom: it would pull the header and footer away
+           from the window edge and show the space scene behind them */
+        html, body {
+            overscroll-behavior-y: none;
+        }
+
+        /* header and footer: flat, opaque space grey */
+        #cut, #footer-cut {
+            background-color: #62656b;
+            color: #f2f3f5;
+        }
+
         #cut {
-            height: 150px;
+            min-height: 150px;
+            align-items: flex-start;
+            padding-bottom: 48px;  /* an opened phone menu stays above the slant */
             width: inherit;
             clip-path: polygon(0 0, 100% 0, 100% 38%, 0% 100%);
-            background-color: white;
-            color: black;
         }
 
         #footer-cut {
-            background-color: white;
             /* fixed-height slant, content padded below it, so a taller footer is never cut */
             clip-path: polygon(0 70px, 100% 0, 100% 100%, 0% 100%);
             padding-top: 80px;
-            color: black;
         }
 
-        .nav-link {
-            color: black;
+        #footer-cut a {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* phones: menu button on the left, clear of the slant on the right */
+        #cut .navbar-toggler {
+            order: -1;
+            margin-right: auto;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: #fff;
+        }
+
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: #fff;
+            text-decoration: underline;
         }
 
         /* cards: frosted glass over the orrery, quiet title with a fading rule */
@@ -118,7 +144,7 @@
 </head>
 <body>
     <canvas id="orrery" data-atlas="{% static 'orrery/atlas.jpg' %}" aria-hidden="true"></canvas>
-    <nav class="navbar navbar-expand-lg" id="cut">
+    <nav class="navbar navbar-expand-lg navbar-dark" id="cut">
         <a class="navbar-brand" href="{% url 'personal:index' %}"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -146,7 +172,6 @@
         <div class="container-fluid text-center text-md-left">
             <div class="row">
                 <div class="col-md-6 mt-md-0 mt-3">
-                    <h5 class="text-uppercase">Personal Website</h5>
                     <p>Author: Jay Rothenberger</p>
                     <p class="small">Background planet maps: <a href="https://www.solarsystemscope.com/textures/">Solar System Scope</a> (CC BY 4.0); Pluto: NASA/JHUAPL/SwRI.</p>
                 </div>
