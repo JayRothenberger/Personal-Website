@@ -13,12 +13,25 @@
             flex-direction: column;
             min-height: 100%;
             color: white;
-            background-color: red;
-            background-image: url("https://media2.giphy.com/media/YkXNjAkG7CfEVx3gcy/giphy.gif");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: 0 30%;
+        }
+
+        /* black on html only: a body background (Bootstrap sets white) paints over the z-index -1 canvas */
+        html {
+            background-color: black;
+        }
+
+        body {
+            background-color: transparent;
+        }
+
+        /* live voxel solar system behind the page (personal/static/orrery, built from abattler/orrery) */
+        #orrery {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
         #cut {
@@ -45,6 +58,7 @@
     </style>
 </head>
 <body>
+    <canvas id="orrery" data-atlas="{% static 'orrery/atlas.jpg' %}" aria-hidden="true"></canvas>
     <nav class="navbar navbar-expand-lg" id="cut">
         <a class="navbar-brand" href="{% url 'personal:index' %}"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,6 +88,7 @@
                 <div class="col-md-6 mt-md-0 mt-3">
                     <h5 class="text-uppercase">Personal Website</h5>
                     <p>Author: Jay Rothenberger</p>
+                    <p class="small">Background planet maps: <a href="https://www.solarsystemscope.com/textures/">Solar System Scope</a> (CC BY 4.0); Pluto: NASA/JHUAPL/SwRI.</p>
                 </div>
             </div>
         </div>
@@ -86,5 +101,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>hljs.highlightAll();</script>
+    <script type="module">
+        import init from "{% static 'orrery/orrery.js' %}";
+        init({ module_or_path: "{% static 'orrery/orrery_bg.wasm' %}" });
+    </script>
 </body>
 </html>

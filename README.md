@@ -7,6 +7,8 @@ deployed on Heroku.
 
 - `mysite/`: project settings and root URLs.
 - `personal/templates/personal/`: the pages. `base.html` holds the shared layout.
+- `personal/static/orrery/`: the live voxel solar system drawn behind every page (wasm +
+  WebGL2). Built artifacts only; the source is `~/abattler/orrery` (see its README to rebuild).
 - `personal/static/`: images and the CV and resume PDFs. To update a PDF, replace the file
   here and keep the same name, so `/static/<name>.pdf` links keep working.
 
