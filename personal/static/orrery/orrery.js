@@ -477,6 +477,10 @@ function __wbg_get_imports() {
             const ret = arg0.then(arg1);
             return ret;
         },
+        __wbg_timeStamp_e394c7b3859c9fb1: function(arg0) {
+            const ret = arg0.timeStamp;
+            return ret;
+        },
         __wbg_uniform1f_0b36dc15cb2b4991: function(arg0, arg1, arg2) {
             arg0.uniform1f(arg1, arg2);
         },
