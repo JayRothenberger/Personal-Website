@@ -13,6 +13,8 @@
             flex-direction: column;
             min-height: 100%;
             color: white;
+            /* sideways swipes go to the orrery's drag-to-warp instead of the browser */
+            touch-action: pan-y pinch-zoom;
         }
 
         /* black on html only: a body background (Bootstrap sets white) paints over the z-index -1 canvas */
