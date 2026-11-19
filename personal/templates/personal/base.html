@@ -66,8 +66,8 @@
         }
 
         #footer-cut {
-            /* fixed-height slant. The text is centred, where the slant is 35px down; padding top
-               minus bottom = 35px puts the text block mid-way in the visible part */
+            /* fixed-height slant, 35px down at mid-width; padding top minus bottom = 35px puts the
+               text block mid-way in the visible part */
             clip-path: polygon(0 70px, 100% 0, 100% 100%, 0% 100%);
             padding: 62px 16px 27px;
             margin-top: auto;
@@ -78,15 +78,11 @@
             text-decoration: underline;
         }
 
-        /* wide screens: links centred, at the middle of the visible band there
-           (the slant leaves 0-103px of the 150px header visible at mid-width) */
+        /* wide screens: links at the height of the middle of the visible band at mid-width
+           (the slant leaves 0-103px of the 150px header visible there) */
         @media (min-width: 992px) {
             #cut {
                 padding-top: 31px;
-            }
-
-            #cut .navbar-collapse {
-                justify-content: center;
             }
         }
 
@@ -186,7 +182,7 @@
         </div>
     </div>
 
-    <footer class="page-footer font-small text-center" id="footer-cut">
+    <footer class="page-footer font-small text-right" id="footer-cut">
         <p>Author: Jay Rothenberger</p>
         <p class="small">Background planet maps: <a href="https://www.solarsystemscope.com/textures/">Solar System Scope</a> (CC BY 4.0); Pluto: NASA/JHUAPL/SwRI.</p>
         <p class="mb-0">© 2026 Copyright: Jay Rothenberger (jay.c.rothenberger [at] gmail [dot] com)</p>
