@@ -11,6 +11,8 @@ deployed on Heroku.
   WebGL2). Built artifacts only; the source is `~/abattler/orrery` (see its README to rebuild).
 - `personal/static/`: images and the CV and resume PDFs. To update a PDF, replace the file
   here and keep the same name, so `/static/<name>.pdf` links keep working.
+- `tools/favicon.py`: makes `favicon.ico` and `apple-touch-icon.png`, an MS Paint style
+  portrait from `me.jpg`. Run `python3 tools/favicon.py` after changing the photo.
 
 ## Configuration
 
