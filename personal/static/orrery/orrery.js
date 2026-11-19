@@ -166,12 +166,6 @@ function __wbg_get_imports() {
             const ret = arg0.decode();
             return ret;
         },
-        __wbg_depthMask_276856a569045897: function(arg0, arg1) {
-            arg0.depthMask(arg1 !== 0);
-        },
-        __wbg_depthMask_2ba7e83178c3cec3: function(arg0, arg1) {
-            arg0.depthMask(arg1 !== 0);
-        },
         __wbg_devicePixelRatio_90ee4024cee5d5f4: function(arg0) {
             const ret = arg0.devicePixelRatio;
             return ret;
