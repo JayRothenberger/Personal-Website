@@ -8,7 +8,7 @@ PLAIN_STATIC = {
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 
-PAGES = ["index", "ponder", "blog", "cv", "resume", "links", "planetarium"]
+PAGES = ["index", "cv", "resume", "links", "planetarium"]
 
 
 @override_settings(STORAGES=PLAIN_STATIC, SECURE_SSL_REDIRECT=False)
@@ -24,7 +24,8 @@ class PageTests(SimpleTestCase):
         response = self.client.post(reverse("personal:index"), {"torun": "1"})
         self.assertEqual(response.status_code, 405)
 
-    def test_code_execution_endpoints_are_gone(self):
-        for path in ["/run/?torun=1", "/rendezvous/"]:
+    def test_removed_paths_are_gone(self):
+        # code execution endpoints, the unlisted blog and ponder pages, and the admin
+        for path in ["/run/?torun=1", "/rendezvous/", "/blog/", "/ponder/", "/admin/"]:
             with self.subTest(path=path):
                 self.assertEqual(self.client.get(path).status_code, 404)

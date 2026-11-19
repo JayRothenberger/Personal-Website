@@ -6,7 +6,6 @@
     <title>Jay Rothenberger</title>
     <link rel="icon" href="{% static 'favicon.ico' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css" integrity="sha512-rt/SrQ4UNIaGfDyEXZtNcyWvQeOq0QLygHluFQcSjaGB04IxWhal71tKuzP6K8eYXYB6vJV4pHkXcmFGGQ1/0w==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css" integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <style>
         html, body {
             display: flex;
@@ -24,6 +23,7 @@
 
         body {
             background-color: transparent;
+            flex: 1 0 auto;  /* fill the window, so a short page still ends at the footer */
         }
 
         /* live voxel solar system behind the page (personal/static/orrery, built from abattler/orrery) */
@@ -60,6 +60,7 @@
             /* fixed-height slant, content padded below it, so a taller footer is never cut */
             clip-path: polygon(0 70px, 100% 0, 100% 100%, 0% 100%);
             padding-top: 80px;
+            margin-top: auto;
         }
 
         #footer-cut a {
@@ -136,10 +137,6 @@
         .card a {
             color: #8ab4ff;
         }
-
-        .python {
-            padding-left: 5%;
-        }
     </style>
 </head>
 <body>
@@ -184,8 +181,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>hljs.highlightAll();</script>
     <script type="module">
         import init from "{% static 'orrery/orrery.js' %}";
         init({ module_or_path: "{% static 'orrery/orrery_bg.wasm' %}" });

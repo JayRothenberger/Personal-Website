@@ -50,9 +50,7 @@ ALLOWED_HOSTS = env_list(
 )
 
 INSTALLED_APPS = [
-    # Listed first so its admin/base_site.html overrides Django's.
     "personal",
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",

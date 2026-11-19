@@ -48,5 +48,3 @@ SECRET_KEY=test .venv/bin/python manage.py test
 1. Set the secret key once:
    `heroku config:set SECRET_KEY=<generated key> -a <app>`
 2. Deploy. The Docker build and the Python buildpack both run `collectstatic`.
-3. If the app uses a database (for example for the admin), run
-   `heroku run python manage.py migrate -a <app>`.

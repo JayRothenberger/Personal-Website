@@ -10,8 +10,6 @@ def page(template):
 
 urlpatterns = [
     path("", page("index"), name="index"),
-    path("ponder/", page("test"), name="ponder"),
-    path("blog/", page("blog"), name="blog"),
     path("cv/", page("cv"), name="cv"),
     path("resume/", page("resume"), name="resume"),
     path("links/", page("links"), name="links"),
