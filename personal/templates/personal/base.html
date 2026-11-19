@@ -42,10 +42,19 @@
             overscroll-behavior-y: none;
         }
 
-        /* header and footer: flat, opaque space grey */
+        /* header and footer: dark space grey, lit by the orrery's Sun. The orrery sets --sun-x/-y
+           (viewport px), --sun-r (apparent radius) and --sun-a (0..1, how much of the Sun shows);
+           a fixed background keeps the oval glow lined up with the Sun on screen while scrolling. */
         #cut, #footer-cut {
-            background-color: #62656b;
+            background-color: #4b4e54;
+            background-image: radial-gradient(
+                ellipse calc(var(--sun-r, 0px) * 7) calc(var(--sun-r, 0px) * 4.5) at var(--sun-x, -9999px) var(--sun-y, -9999px),
+                rgba(255, 200, 140, calc(var(--sun-a, 0) * .3)),  /* .3 at most keeps white text at 4.5:1 */
+                rgba(255, 160, 90, calc(var(--sun-a, 0) * .12)) 45%,
+                transparent 100%);
+            background-attachment: fixed;
             color: #f2f3f5;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .45);  /* white text stays readable where it is lit */
         }
 
         #cut {
@@ -57,15 +66,28 @@
         }
 
         #footer-cut {
-            /* fixed-height slant, content padded below it, so a taller footer is never cut */
+            /* fixed-height slant. The text is centred, where the slant is 35px down; padding top
+               minus bottom = 35px puts the text block mid-way in the visible part */
             clip-path: polygon(0 70px, 100% 0, 100% 100%, 0% 100%);
-            padding-top: 80px;
+            padding: 62px 16px 27px;
             margin-top: auto;
         }
 
         #footer-cut a {
             color: #fff;
             text-decoration: underline;
+        }
+
+        /* wide screens: links centred, at the middle of the visible band there
+           (the slant leaves 0-103px of the 150px header visible at mid-width) */
+        @media (min-width: 992px) {
+            #cut {
+                padding-top: 31px;
+            }
+
+            #cut .navbar-collapse {
+                justify-content: center;
+            }
         }
 
         /* phones: menu button on the left, clear of the slant on the right */
@@ -142,7 +164,6 @@
 <body>
     <canvas id="orrery" data-atlas="{% static 'orrery/atlas.jpg' %}" aria-hidden="true"></canvas>
     <nav class="navbar navbar-expand-lg navbar-dark" id="cut">
-        <a class="navbar-brand" href="{% url 'personal:index' %}"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -165,18 +186,10 @@
         </div>
     </div>
 
-    <footer class="page-footer font-small" id="footer-cut">
-        <div class="container-fluid text-center text-md-left">
-            <div class="row">
-                <div class="col-md-6 mt-md-0 mt-3">
-                    <p>Author: Jay Rothenberger</p>
-                    <p class="small">Background planet maps: <a href="https://www.solarsystemscope.com/textures/">Solar System Scope</a> (CC BY 4.0); Pluto: NASA/JHUAPL/SwRI.</p>
-                </div>
-            </div>
-        </div>
-        <div class="footer-copyright text-right py-3">
-            © 2026 Copyright: Jay Rothenberger (jay.c.rothenberger [at] gmail [dot] com)
-        </div>
+    <footer class="page-footer font-small text-center" id="footer-cut">
+        <p>Author: Jay Rothenberger</p>
+        <p class="small">Background planet maps: <a href="https://www.solarsystemscope.com/textures/">Solar System Scope</a> (CC BY 4.0); Pluto: NASA/JHUAPL/SwRI.</p>
+        <p class="mb-0">© 2026 Copyright: Jay Rothenberger (jay.c.rothenberger [at] gmail [dot] com)</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
